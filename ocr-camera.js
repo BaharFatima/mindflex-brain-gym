@@ -74,3 +74,6 @@ function updateSpeedUI() {
   const el = document.getElementById("speedDisplay");
   if (el) el.innerText = "Speed: " + window.speechRate;
 }
+
+
+ocr-camera.js
