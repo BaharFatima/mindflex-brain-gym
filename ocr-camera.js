@@ -76,4 +76,5 @@ function updateSpeedUI() {
 }
 
 
-ocr-camera.js
+
+
