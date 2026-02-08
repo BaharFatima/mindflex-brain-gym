@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up & Login</title>
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    * {
+      margin: 0; padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
+    }
+
+    body {
+      background-color: #d9eaff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 350px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      padding: 25px 30px;
+    }
+
+    .input-box {
+      width: 100%;
+      margin-top: 10px;
+      position: relative;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 12px 40px 12px 12px;
+      border-radius: 10px;
+      border: 1px solid #c2dcff;
+      background-color: #f4f9ff;
+    }
+
+    .error {
+      color: red;
+      font-size: 12px;
+      margin-top: 3px;
+    }
+
+    .error-border {
+      border-color: red !important;
+    }
+
+    .eye-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      font-size: 18px;
+      color: #6ea8ff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #6ea8ff;
+      color: white;
+      border: none;
+      border-radius: 25px;
+      margin-top: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #5c95f5;
+    }
+
+    p {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+
+    a {
+      color: #5c95f5;
+      text-decoration: none;
+    }
+
+    .hidden { display: none; }
+
+    /* Social Buttons */
+    .social-btn {
+      width: 100%; background: white;
+      border: 1px solid #c2dcff;
+      border-radius: 25px;
+      padding: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: black;
+    }
+
+    .social-btn:hover {
+      background-color: #f2f8ff;
+      transform: scale(1.02);
+    }
+
+    .social-btn img,
+    .social-btn svg {
+      width: 20px; height: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- SIGNUP FORM -->
+  <div id="signupForm">
+    <h2 style="text-align:center; margin-bottom:10px;">Sign Up</h2>
+
+    <div class="input-box">
+      <input type="text" id="signupUsername" placeholder="Username">
+      <div class="error" id="signupUsernameError"></div>
+    </div>
+
+    <div class="input-box">
+      <input type="email" id="signupEmail" placeholder="Email">
+      <div class="error" id="signupEmailError"></div>
+    </div>
+
+    <div class="input-box">
+      <input type="password" id="signupPassword" placeholder="Password">
+      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('signupPassword', this)"></i>
+      <div class="error" id="signupPasswordError"></div>
+    </div>
+
+    <button onclick="signup()">Sign Up</button>
+
+    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+  </div>
+
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm" class="hidden">
+    <h2 style="text-align:center; margin-bottom:10px;">Login</h2>
+
+    <div class="input-box">
+      <input type="email" id="loginEmail" placeholder="Email">
+      <div class="error" id="loginEmailError"></div>
+    </div>
+
+    <div class="input-box">
+      <input type="password" id="loginPassword" placeholder="Password">
+      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('loginPassword', this)"></i>
+      <div class="error" id="loginPasswordError"></div>
+    </div>
+
+    <p style="text-align:right;">
+      <a href="#" onclick="showForgot()">Forgot password?</a>
+    </p>
+
+    <button onclick="login()">Sign In</button>
+
+    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
+  </div>
+
+
+  <!-- FORGOT PASSWORD FORM -->
+  <div id="forgotForm" class="hidden">
+    <h2 style="text-align:center; margin-bottom:10px;">Reset Password</h2>
+
+    <div class="input-box">
+      <input type="password" id="currentPassword" placeholder="Current Password">
+      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('currentPassword', this)"></i>
+      <div class="error" id="currentPasswordError"></div>
+    </div>
+
+    <div class="input-box">
+      <input type="password" id="newPassword" placeholder="New Password">
+      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('newPassword', this)"></i>
+      <div class="error" id="newPasswordError"></div>
+    </div>
+
+    <button onclick="resetPassword()">Reset Password</button>
+    <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+  </div>
+
+
+  <!-- SOCIAL BUTTONS -->
+  <div style="margin-top:20px;">
+    <a class="social-btn" href="https://www.facebook.com/" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#1877F2" d="M24 4C12.95 4 4 12.95 4 24c0 9.93 7.44 18.12 17.07 19.74V30.05h-5.13v-6.05h5.13v-4.5c0-5.07 3-7.87 7.62-7.87 2.21 0 4.53.4 4.53.4v4.97h-2.55c-2.52 0-3.3 1.56-3.3 3.15v3.85h5.62l-.9 6.05h-4.72v13.69C36.56 42.12 44 33.93 44 24c0-11.05-8.95-20-20-20z"/><path fill="#fff" d="M32.1 30.05l.9-6.05h-5.62v-3.85c0-1.59.78-3.15 3.3-3.15h2.55v-4.97s-2.32-.4-4.53-.4c-4.62 0-7.62 2.8-7.62 7.87v4.5h-5.13v6.05h5.13v13.69a20.07 20.07 0 0 0 6.23 0V30.05h4.72z"/></svg>
+      Continue with Facebook
+    </a>
+
+    <a class="social-btn" href="https://appleid.apple.com/" target="_blank">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M33.52 25.22c-.04-4.07 3.33-6.04 3.47-6.13-1.9-2.77-4.86-3.15-5.91-3.19-2.51-.26-4.9 1.48-6.17 1.48-1.29 0-3.25-1.44-5.35-1.4-2.73.04-5.26 1.6-6.66 4.08-2.85 4.93-.72 12.19 2.04 16.18 1.36 1.94 2.98 4.1 5.1 4.03 2.04-.08 2.8-1.31 5.26-1.31 2.45 0 3.13 1.31 5.28 1.27 2.19-.04 3.57-1.98 4.9-3.93 1.54-2.25 2.16-4.42 2.19-4.54-.05-.02-4.22-1.62-4.15-6.54zM29.49 13.93c1.09-1.36 1.82-3.24 1.62-5.13-1.56.06-3.47 1.04-4.59 2.37-1.01 1.16-1.89 3.05-1.65 4.88 1.74.14 3.52-.88 4.62-2.12z"/></svg>
+      Continue with Apple
+    </a>
+
+    <a class="social-btn" href="https://accounts.google.com/" target="_blank">
+      <img src="https://www.gstatic.com/images/branding/product/1x/gsa_64dp.png">
+      Continue with Google
+    </a>
+  </div>
+
+</div>
+
+<!-- JAVASCRIPT -->
+<script>
+
+function showLogin() {
+  signupForm.classList.add("hidden");
+  forgotForm.classList.add("hidden");
+  loginForm.classList.remove("hidden");
+}
+
+function showSignup() {
+  loginForm.classList.add("hidden");
+  forgotForm.classList.add("hidden");
+  signupForm.classList.remove("hidden");
+}
+
+function showForgot() {
+  loginForm.classList.add("hidden");
+  signupForm.classList.add("hidden");
+  forgotForm.classList.remove("hidden");
+}
+
+function highlight(input, errorBox, msg){
+  errorBox.innerText = msg;
+  input.classList.add("error-border");
+}
+
+function clearHighlight(input, errorBox){
+  errorBox.innerText = "";
+  input.classList.remove("error-border");
+}
+
+/* SIGNUP VALIDATION */
+function signup() {
+  let username = signupUsername.value.trim();
+  let email = signupEmail.value.trim();
+  let password = signupPassword.value.trim();
+
+  let valid = true;
+
+  clearHighlight(signupUsername, signupUsernameError);
+  clearHighlight(signupEmail, signupEmailError);
+  clearHighlight(signupPassword, signupPasswordError);
+
+  if (username.length < 3){
+    highlight(signupUsername, signupUsernameError, "Username must be at least 3 characters");
+    valid = false;
+  }
+
+  let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+  if (!email.match(emailPattern)){
+    highlight(signupEmail, signupEmailError, "Enter a valid email");
+    valid = false;
+  }
+
+  if (password.length < 6){
+    highlight(signupPassword, signupPasswordError, "Password must be 6+ characters");
+    valid = false;
+  }
+
+  if (!valid) return;
+
+  localStorage.setItem("username", username);
+  localStorage.setItem("email", email);
+  localStorage.setItem("password", password);
+
+  alert("Account created successfully!");
+  showLogin();
+}
+
+/* LOGIN */
+function login() {
+  let email = loginEmail.value.trim();
+  let password = loginPassword.value.trim();
+
+  clearHighlight(loginEmail, loginEmailError);
+  clearHighlight(loginPassword, loginPasswordError);
+
+  if (!email){
+    highlight(loginEmail, loginEmailError, "Enter your email");
+    return;
+  }
+
+  if (!password){
+    highlight(loginPassword, loginPasswordError, "Enter your password");
+    return;
+  }
+
+  if (
+    email === localStorage.getItem("email") &&
+    password === localStorage.getItem("password")
+  ) {
+    alert("Welcome " + localStorage.getItem("username") + "! Login Successful");
+    window.location.href = "main.html";   // ✅ CHANGE IS HERE
+  } else {
+    highlight(loginPassword, loginPasswordError, "Invalid email or password");
+  }
+}
+
+
+/* RESET PASSWORD */
+function resetPassword(){
+  let currentPass = currentPassword.value.trim();
+  let newPass = newPassword.value.trim();
+
+  clearHighlight(currentPassword, currentPasswordError);
+  clearHighlight(newPassword, newPasswordError);
+
+  if (currentPass !== localStorage.getItem("password")){
+    highlight(currentPassword, currentPasswordError, "Current password is incorrect");
+    return;
+  }
+
+  if (newPass.length < 6){
+    highlight(newPassword, newPasswordError, "New password must be 6+ characters");
+    return;
+  }
+
+  localStorage.setItem("password", newPass);
+  alert("Password updated!");
+  showLogin();
+}
+
+/* PASSWORD VISIBILITY */
+function togglePassword(id, icon){
+  let input = document.getElementById(id);
+  if (input.type === "password"){
+    input.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+  } else {
+    input.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+  }
+}
+
+</script>
+
+</body>
+</html>

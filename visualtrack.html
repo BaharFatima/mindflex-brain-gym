@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Visual Track - Tier 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(180deg, #E3F2FD, #FFFFFF);
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+header {
+  background: none;
+  padding: 20px 0 10px 0;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  position: sticky;
+  top: 0;
+}
+
+.page-title { font-weight: 600; color: #1565C0; }
+.back-btn { color: #1565C0; text-decoration: none; font-size: 20px; position: absolute; left: 15px; top: 20px; }
+
+#gameArea {
+  width: 80%;
+  max-width: 300px;      /* original width */
+  height: 400px;          /* slightly smaller than 200px, but keeps visual size */
+  margin: 20px auto 30px auto;
+  position: relative;
+  border: 2px dashed #1565C0;
+  border-radius: 20px;
+  background: #E3F2FD88;
+  overflow: hidden;
+}
+
+.track-dot {
+  width: 50px;           /* keep original dot size */
+  height: 50px;
+  background: #2196F3;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.track-dot:hover { transform: translateY(-50%) scale(1.1); }
+
+#score { font-size: 16px; color: #0D47A1; margin-top: 5px; }
+#level {
+  position: fixed;
+  bottom: 45px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  color: #0D47A1;
+}
+
+#nextLevel {
+  margin: 8px auto 25px auto;
+  background: #1E88E5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 15px;
+  cursor: pointer;
+  display: none;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../focuslab.html" class="back-btn">←</a>
+  <span class="page-title">Visual Track</span>
+</header>
+
+<p id="target">Click the moving blue dot before it reaches the end!</p>
+<div id="gameArea"></div>
+<p id="score">Score: 0</p>
+<button id="nextLevel">Next Level ➜</button>
+<div id="level">Level 1 / 150</div>
+<script src="logistic.js"></script>
+<script>
+const maxLevel = 150;
+
+// Load saved progress or default
+let level = parseInt(localStorage.getItem('visualTrackLevel')) || 1;
+let score = parseInt(localStorage.getItem('visualTrackScore')) || 0;
+let speed = parseFloat(localStorage.getItem('visualTrackSpeed')) || 2;
+
+const gameArea = document.getElementById('gameArea');
+const scoreDisplay = document.getElementById('score');
+const levelDisplay = document.getElementById('level');
+const nextButton = document.getElementById('nextLevel');
+
+function updateDisplays() {
+  scoreDisplay.textContent = `Score: ${score}`;
+  levelDisplay.textContent = `Level ${level} / ${maxLevel}`;
+}
+updateDisplays();
+
+function spawnDot() {
+  gameArea.innerHTML = ''; // ensure only one dot at a time
+  const dot = document.createElement('div');
+  dot.classList.add('track-dot');
+  dot.style.left = '0px';
+  gameArea.appendChild(dot);
+
+  const interval = setInterval(() => {
+    let currentX = parseFloat(dot.style.left);
+    currentX += speed;
+    if (currentX + 50 >= gameArea.clientWidth) { // keep original 50px
+      clearInterval(interval);
+      dot.remove();
+      spawnDot(); // spawn next dot automatically
+    } else {
+      dot.style.left = currentX + 'px';
+    }
+  }, 16);
+
+  dot.onclick = () => {
+    score++;
+    localStorage.setItem('visualTrackScore', score); // save score
+    updateDisplays();
+    dot.remove();
+    clearInterval(interval);
+    if (score >= 10) { // level complete
+      nextButton.style.display = 'inline-block';
+    } else {
+      spawnDot(); // next dot
+    }
+  };
+}
+
+nextButton.onclick = () => {
+  level++;
+  if (level > maxLevel) {
+    alert("🎉 You completed all 150 levels! Baymax is proud of you 🤖");
+    level = 1;
+    speed = 2;
+  } else {
+    speed += 0.5; // gradually increase speed
+  }
+  score = 0;
+  localStorage.setItem('visualTrackLevel', level);
+  localStorage.setItem('visualTrackScore', score);
+  localStorage.setItem('visualTrackSpeed', speed);
+  updateDisplays();
+  nextButton.style.display = 'none';
+  spawnDot();
+};
+
+// Start game
+spawnDot();
+</script>
+
+</body>
+</html>

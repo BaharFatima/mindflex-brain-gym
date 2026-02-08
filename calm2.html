@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sound Haven — Calm Space</title>
+<style>
+  body {
+    background: linear-gradient(to bottom, #caf0f8, #ade8f4);
+    font-family: 'Poppins', sans-serif;
+    color: #023e8a;
+    text-align: center;
+    padding: 20px;
+  }
+  h1 { font-size: 2.2em; }
+  .sound-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+  }
+  .sound-card {
+    background: #f6fbff;
+    border-radius: 20px;
+    padding: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+  iframe {
+    border-radius: 12px;
+    width: 100%;
+    height: 150px;
+  }
+  .back-btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: #1565C0;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .back-btn:hover { background: #0D47A1; }
+</style>
+</head>
+<body>
+
+<h1>🎵 Sound Haven</h1>
+<p>Listen to soothing calm sounds from YouTube.</p>
+
+
+<div class="sound-list">
+  <div class="sound-card">
+    <h3>Ocean Waves 🌊</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/rET3lp6kk2E?si=C3mg7TDKwZusjBXw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card" id="buddy-card" style="text-align:center; padding:30px;">
+  <h3>Buddy Breathing 🫂</h3>
+  <p>Click Enter to start the guided breathing exercise with Buddy.</p>
+
+  <button id="enter-btn" style="padding:10px 20px; border:none; border-radius:10px; background:#00b4d8; color:white; cursor:pointer; margin-top:15px;">Enter</button>
+  <button class="back-btn" onclick="history.back()" style="margin-top:15px; display:block;">←</button>
+
+  <!-- Breathing container hidden initially -->
+  <div class="breathing-container" id="breathing-container" style="display:none; margin-top:20px;">
+    <img src="https://i.pinimg.com/736x/c3/43/ac/c343aca5c547dba9841530bfeb37a823.jpg" alt="Baymax" class="baymax-img">
+    <div class="breathing-circle"></div>
+    <p class="breathing-text">Inhale...</p>
+
+    <div class="controls" style="margin-top:15px;">
+      <button id="start-stop-btn" style="padding:8px 15px; border:none; border-radius:8px; background:#00b4d8; color:white; cursor:pointer;">Start</button>
+      <button id="fullscreen-btn" style="padding:8px 15px; border:none; border-radius:8px; background:#023e8a; color:white; cursor:pointer;">Full Screen</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .breathing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .baymax-img {
+    width: 120px;
+    margin-bottom: 10px;
+  }
+  .breathing-circle {
+    width: 120px;
+    height: 120px;
+    background-color: #00b4d8;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    transition: all 4s ease-in-out;
+  }
+  .breathing-text {
+    font-size: 1.2em;
+    color: #023e8a;
+    font-weight: 500;
+  }
+  .back-btn {
+    background-color: #00b4d8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  .fullscreen {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: linear-gradient(to bottom, #caf0f8, #ade8f4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+  }
+  .fullscreen .breathing-container {
+    transform: scale(1.5);
+  }
+</style>
+
+<script>
+  const enterBtn = document.getElementById('enter-btn');
+  const breathingContainer = document.getElementById('breathing-container');
+  const startStopBtn = document.getElementById('start-stop-btn');
+  const fullscreenBtn = document.getElementById('fullscreen-btn');
+  const circle = breathingContainer.querySelector('.breathing-circle');
+  const text = breathingContainer.querySelector('.breathing-text');
+
+  let interval;
+  let inhale = true;
+  let running = false;
+
+  // Show breathing exercise on Enter click
+  enterBtn.addEventListener('click', () => {
+    breathingContainer.style.display = 'flex';
+    enterBtn.style.display = 'none';
+  });
+
+  // Start / Stop breathing animation
+  startStopBtn.addEventListener('click', () => {
+    if(running) {
+      clearInterval(interval);
+      running = false;
+      startStopBtn.textContent = 'Start';
+    } else {
+      interval = setInterval(() => {
+        if(inhale) {
+          circle.style.transform = 'scale(1.5)';
+          text.textContent = 'Exhale...';
+        } else {
+          circle.style.transform = 'scale(1)';
+          text.textContent = 'Inhale...';
+        }
+        inhale = !inhale;
+      }, 4000);
+      running = true;
+      startStopBtn.textContent = 'Stop';
+    }
+  });
+
+  // Fullscreen functionality
+  fullscreenBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!document.fullscreenElement) {
+      breathingContainer.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  });
+</script>
+
+
+  <div class="sound-card">
+    <h3>Forest Ambience 🌲</h3>
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/Qm846KdZN_c?si=49Hx2ShCYjeI7tn_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Soft Rain ☔</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/q76bMs-NwRk?si=sgEmhLPGPdw7E1dc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Wind Chimes 🌬️</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/oWxFwmuG21g?si=ri1xvCI-cvooqnm-&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Peaceful Piano 🎹</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/3NycM9lYdRI?si=Laqcnb_at-ZjlEfy&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>" allow="autoplay; encrypted-media"></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Mountain Stream 💧</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/aVS7PHjSxdI?si=YWMCQLBvXa0Mg9r-&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Morning Birds 🕊️</h3>
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/zwenk-MvUWc?si=ejZ3yajCEsfrbMVF&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Night Crickets 🌌</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/7GoXVDH656g?si=RPEPCSFqYZnMcz9t&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Tibetan Singing Bowls 🕉️</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/TAESZsLJdVw?si=d8e6FeeC02WSi_xu&amp;start=11" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+
+</body>
+</html>

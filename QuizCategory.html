@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Quiz Categories</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+  html, body {
+    height: 100%;
+    background: linear-gradient(135deg, #dceeff, #a6d9ff);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app {
+    width: 320px;
+    height: 640px;
+    background: #e3f0ff;
+    border-radius: 25px;
+    box-shadow: 0 10px 25px rgba(0,80,160,0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    color: #003366;
+    font-size: 1.3rem;
+  }
+
+  main {
+    flex: 1;
+    padding: 20px;
+    padding-bottom: 60px;
+  }
+
+  h2 {
+    text-align: center;
+    color: #003366;
+    margin-bottom: 20px;
+  }
+
+  /* Category buttons */
+  .category {
+    width: 100%;
+    background: white;
+    padding: 15px;
+    border-radius: 18px;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #003366;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+  }
+
+  .category:active {
+    transform: scale(0.95);
+  }
+
+  /* nav bar */
+  .nav-container {
+    position: absolute; left:0; right:0; bottom:0;
+    display: flex; justify-content: center;
+  }
+
+  .menu-container {
+    width: 100%;
+    background: #ffffff;
+    border-radius: 12px 12px 0 0;
+    padding: 6px 16px;
+    display: flex;
+    justify-content: space-around;
+    height: 45px;
+    box-shadow: 0 -3px 8px rgba(0,0,0,0.1);
+  }
+
+  .menu-item { flex: 1; display:flex; justify-content:center; align-items:center; }
+  .menu-icon {
+    width: 30px; height: 30px; border-radius: 50%;
+    display:flex; justify-content:center; align-items:center;
+    background:#f0f2f5; color:#5f6368;
+  }
+
+  .menu-item:nth-child(4) .menu-icon { background: #00bcd4; color:white; }
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<header>
+  <a href="Studyzone.html" style="text-decoration:none;color:#003366;">←</a>
+  <span style="font-weight:600;">Quiz</span>
+  <span></span>
+</header>
+
+<main>
+  <h2>Select a Category</h2>
+
+  <div class="category" onclick="startQuiz('science')">🔬 Science</div>
+  <div class="category" onclick="startQuiz('food')">🍕 Food</div>
+  <div class="category" onclick="startQuiz('history')">🏺 History</div>
+  <div class="category" onclick="startQuiz('gk')">💡 Fun Facts / GK</div>
+</main>
+
+<!-- NAV BAR -->
+<div class="nav-container">
+  <div class="menu-container">
+    <div class="menu-item"><div class="menu-icon"><i class="fas fa-home"></i></div></div>
+    <div class="menu-item"><div class="menu-icon"><i class="fas fa-gamepad"></i></div></div>
+    <div class="menu-item"><div class="menu-icon"><i class="fas fa-book"></i></div></div>
+    <div class="menu-item"><div class="menu-icon"><i class="fas fa-lightbulb"></i></div></div>
+    <div class="menu-item"><div class="menu-icon"><i class="fas fa-user-circle"></i></div></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+function startQuiz(category) {
+  localStorage.setItem("quizCategory", category);
+  window.location.href = "QuizPage.html";
+}
+</script>
+
+</body>
+</html>

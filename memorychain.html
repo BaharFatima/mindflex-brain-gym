@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Memory Chain - Tier 2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(180deg, #E3F2FD, #FFFFFF);
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  header {
+    width: 100%;
+    padding: 12px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .page-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1565C0;
+  }
+  .back-btn {
+    color: #1565C0;
+    text-decoration: none;
+    font-size: 20px;
+    position: absolute;
+    left: 15px;
+  }
+  .main-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #status {
+    font-size: 14px;
+    color: #0D47A1;
+    margin-bottom: 10px;
+  }
+  #gameArea {
+    display: grid;
+    grid-template-columns: repeat(3, 80px);
+    gap: 10px;
+    justify-content: center;
+    pointer-events: auto; /* toggled in JS */
+  }
+  .block {
+    width: 80px;
+    height: 80px;
+    background: #BBDEFB;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: transform 0.18s, background 0.18s;
+    user-select: none;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:600;
+    color: transparent; /* optional, hides index */
+  }
+  .block.active { background: #1565C0; transform: scale(1.08); color: white; }
+  .block.correct { background: #4CAF50; color: white; }
+  .block.wrong { background: #E53935; color: white; }
+  footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  #nextLevel {
+    background: #1E88E5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 22px;
+    font-size: 15px;
+    cursor: pointer;
+    display: none;
+    margin-bottom: 6px;
+  }
+  #level { font-weight: 600; font-size: 15px; color: #0D47A1; }
+  @media (max-width: 340px) {
+    #gameArea { grid-template-columns: repeat(3, 70px); gap: 8px; }
+    .block { width: 70px; height: 70px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../focuslab.html" class="back-btn">←</a>
+  <span class="page-title">Memory Chain</span>
+</header>
+
+<div class="main-section">
+  <p id="status">Watch the pattern carefully...</p>
+  <div id="gameArea"></div>
+</div>
+
+<footer>
+  <button id="nextLevel">Next Level ➜</button>
+  <div id="level">Level 1 / 150</div>
+</footer>
+<script src="logistic.js"></script>
+<script>
+/* ---------- STATE ---------- */
+const grid = document.getElementById("gameArea");
+const statusText = document.getElementById("status");
+const nextButton = document.getElementById("nextLevel");
+const levelDisplay = document.getElementById("level");
+
+let level = parseInt(localStorage.getItem("memoryChainLevel")) || 1;
+const maxLevel = 150;
+let sequence = [];
+let playerSequence = [];
+let clickable = false;
+let playing = false; // whether sequence is currently playing
+
+/* ---------- HELPERS ---------- */
+const delay = ms => new Promise(res => setTimeout(res, ms));
+
+function setPointerEvents(enabled) {
+  grid.style.pointerEvents = enabled ? "auto" : "none";
+}
+
+/* ---------- GRID ---------- */
+function createGrid() {
+  grid.innerHTML = "";
+  for (let i = 0; i < 9; i++) {
+    const block = document.createElement("div");
+    block.classList.add("block");
+    block.dataset.index = i;
+    // optionally show index for debugging: block.textContent = i;
+    block.addEventListener("click", handleBlockClick);
+    grid.appendChild(block);
+  }
+}
+
+/* ---------- SEQUENCE PLAYBACK (RELIABLE) ---------- */
+async function playSequence() {
+  // disable user clicks during playback
+  playing = true;
+  clickable = false;
+  setPointerEvents(false);
+  playerSequence = [];
+  statusText.textContent = "Watch closely...";
+
+  const blocks = Array.from(document.querySelectorAll(".block"));
+  const flashTime = Math.max(300 - level * 1.5, 100); // ms
+  const pauseBetween = flashTime * 0.6;
+
+  // ensure no leftover classes
+  blocks.forEach(b => b.classList.remove("active","wrong","correct"));
+
+  // Sequentially flash each element in sequence
+  for (let idx of sequence) {
+    const b = blocks[idx];
+    b.classList.add("active");
+    await delay(flashTime);
+    b.classList.remove("active");
+    await delay(pauseBetween);
+  }
+
+  // small pause then allow clicks
+  await delay(120);
+  playing = false;
+  clickable = true;
+  setPointerEvents(true);
+  statusText.textContent = "Now repeat the pattern!";
+}
+
+/* ---------- START / NEW LEVEL ---------- */
+function startLevel() {
+  nextButton.style.display = "none";
+  sequence = [];
+  // length scales with level but capped at 12
+  const seqLen = Math.min(3 + Math.floor(level / 3), 12);
+  for (let i = 0; i < seqLen; i++) sequence.push(randomIndex());
+  levelDisplay.textContent = `Level ${level} / ${maxLevel}`;
+  playSequence();
+}
+
+function randomIndex() { return Math.floor(Math.random() * 9); }
+
+/* ---------- CLICK HANDLER (FIXED COMPARISON + VISUALS) ---------- */
+function handleBlockClick(e) {
+  // ignore clicks while sequence playing
+  if (!clickable || playing) return;
+
+  const target = e.currentTarget;
+  const index = Number(target.dataset.index); // explicit conversion
+
+  // provide immediate feedback for press
+  target.classList.add("active");
+  setTimeout(() => target.classList.remove("active"), 160);
+
+  playerSequence.push(index);
+
+  const currentStep = playerSequence.length - 1;
+
+  // Defensive: if sequence is undefined or indices out of range => treat as wrong
+  if (currentStep < 0 || currentStep >= sequence.length) {
+    markWrong(target);
+    return;
+  }
+
+  // Strict number comparison
+  if (index !== sequence[currentStep]) {
+    markWrong(target);
+    return;
+  }
+
+  // If the player matched this step correctly
+  if (playerSequence.length === sequence.length) {
+    // mark success briefly
+    statusText.textContent = "Perfect! 🎉";
+    // optionally flash green on the whole sequence
+    flashCorrectThenRevealNext();
+  } else {
+    // still more steps to go
+    statusText.textContent = `Good — ${playerSequence.length}/${sequence.length}`;
+  }
+}
+
+/* ---------- VISUALS FOR WRONG / CORRECT ---------- */
+function markWrong(targetBlock) {
+  clickable = false;
+  setPointerEvents(false);
+  targetBlock.classList.add("wrong");
+  statusText.textContent = "Wrong pattern! Replaying...";
+  // clear player sequence then replay after short pause
+  setTimeout(() => {
+    targetBlock.classList.remove("wrong");
+    playerSequence = [];
+    playSequence();
+  }, 700);
+}
+
+async function flashCorrectThenRevealNext() {
+  clickable = false;
+  setPointerEvents(false);
+  // flash all blocks green in order to reward the user
+  const blocks = Array.from(document.querySelectorAll(".block"));
+  for (let idx of sequence) {
+    blocks[idx].classList.add("correct");
+    await delay(120);
+    blocks[idx].classList.remove("correct");
+  }
+  // Save level and show next button
+  localStorage.setItem("memoryChainLevel", level);
+  nextButton.style.display = "inline-block";
+  setPointerEvents(true);
+}
+
+/* ---------- NEXT LEVEL ---------- */
+nextButton.onclick = () => {
+  level++;
+  if (level > maxLevel) {
+    alert("🎉 You completed all 150 levels! Baymax salutes your memory power 🤖");
+    level = 1;
+  }
+  startLevel();
+};
+
+/* ---------- INIT ---------- */
+createGrid();
+startLevel();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Count It</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #E3F2FD, #FFFFFF);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    color: #1565C0;
+  }
+
+  header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 25px 0 10px 0;
+    z-index: 10;
+  }
+
+  .page-title {
+    font-weight: 600;
+    font-size: 22px;
+    color: #1565C0;
+  }
+
+  .back-btn {
+    position: absolute;
+    left: 20px;
+    color: #1565C0;
+    text-decoration: none;
+    font-size: 24px;
+    z-index: 2;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    padding: 6px 10px;
+    transition: background 0.3s;
+  }
+  .back-btn:hover {
+    background: rgba(255,255,255,0.9);
+  }
+
+  .game-area {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    width: 90%;
+    max-width: 350px;
+    margin-top: 30px;
+    min-height: 300px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 12px;
+    padding: 10px;
+  }
+
+  .object {
+    font-size: 2rem;
+    margin: 5px;
+  }
+
+  .options {
+    margin-top: 20px;
+    display: flex;
+    gap: 12px;
+  }
+
+  .option {
+    background: #BBDEFB;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .option:hover {
+    background: #90CAF9;
+  }
+
+  .level-display {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #0D47A1;
+  }
+
+  .next-btn {
+    margin-top: 20px;
+    background: #1565C0;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+  }
+
+  .next-btn:hover {
+    background: #0D47A1;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../focuslab.html" class="back-btn">←</a>
+  <span class="page-title">Count It</span>
+</header>
+
+<div class="game-area" id="gameArea"></div>
+
+<div class="options" id="options"></div>
+<div class="level-display" id="levelText">Level 1</div>
+<button class="next-btn" id="nextBtn">Next Level</button>
+<script src="logistic.js"></script>
+<script>
+  const emojis = ["🍎","🍌","🍇","🍓","🍪","🎈","🐶","🐱","🐢","🐧","🌻","🌸","🍕","🍉","🥕"];
+  let level = parseInt(localStorage.getItem('countItLevel')) || 1;
+  const maxLevel = 25;
+  const gameArea = document.getElementById('gameArea');
+  const optionsDiv = document.getElementById('options');
+  const nextBtn = document.getElementById('nextBtn');
+  const levelText = document.getElementById('levelText');
+  let correctAnswer = 0;
+
+  function startLevel() {
+    gameArea.innerHTML = "";
+    optionsDiv.innerHTML = "";
+    nextBtn.style.display = "none";
+
+    levelText.textContent = "Level " + level;
+
+    const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+    const count = Math.floor(Math.random() * (4 + level)) + 3;
+    correctAnswer = count;
+
+    for (let i = 0; i < count; i++) {
+      const span = document.createElement("span");
+      span.textContent = emoji;
+      span.classList.add("object");
+      gameArea.appendChild(span);
+    }
+
+    // generate 3 random options including the correct one
+    let options = new Set([correctAnswer]);
+    while (options.size < 3) {
+      options.add(Math.floor(Math.random() * (correctAnswer + 3)) + 1);
+    }
+    const shuffled = Array.from(options).sort(() => Math.random() - 0.5);
+
+    shuffled.forEach(num => {
+      const btn = document.createElement("button");
+      btn.classList.add("option");
+      btn.textContent = num;
+      btn.onclick = () => checkAnswer(num, btn);
+      optionsDiv.appendChild(btn);
+    });
+  }
+
+  function checkAnswer(selected, btn) {
+    if (selected === correctAnswer) {
+      btn.style.background = "#4CAF50";
+      nextBtn.style.display = "block";
+    } else {
+      btn.style.background = "#E57373";
+    }
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if (level < maxLevel) {
+      level++;
+      localStorage.setItem('countItLevel', level);
+      startLevel();
+    } else {
+      levelText.textContent = "🎉 All Levels Complete!";
+      nextBtn.style.display = "none";
+    }
+  });
+
+  startLevel();
+</script>
+
+</body>
+</html>

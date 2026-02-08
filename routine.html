@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Routine & Tasks</title>
+<style>
+  :root {
+    --bg: #F4F8FC;
+    --accent: #3C8DFF;
+    --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    --container-width: 320px;
+  }
+
+  html,body { height:100%; margin:0; background:var(--bg); font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,"Helvetica Neue",Arial, sans-serif; -webkit-font-smoothing:antialiased; }
+  .viewport {
+    width: var(--container-width);
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .container {
+    padding: 10px 12px 110px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  /* Back Button */
+  .back-btn {
+    position: fixed;
+    top: 12px;
+    left: 8px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    z-index: 60;
+  }
+
+  .header-row { display:flex; align-items:center; justify-content:center; gap:8px; padding-top:6px; }
+  .header-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1B2A41;
+    margin: 6px 0 0;
+  }
+
+  .tabs { display:flex; gap:8px; justify-content:center; margin-top:10px; }
+  .tab {
+    padding:7px 12px;
+    border-radius:18px;
+    background:#E7EFFA;
+    border:none;
+    color:#4A6075;
+    cursor:pointer;
+    font-weight:600;
+    font-size:13px;
+  }
+  .tab.active { background:#D0E4FF; color:#1B2A41; }
+
+  .calendar { background:white; padding:10px; border-radius:14px; box-shadow:var(--card-shadow); text-align:center; margin-top:10px; font-size:13px; }
+
+  .section-title { font-size:16px; font-weight:700; margin:16px 4px 8px; color:#1B2A41; display:flex; justify-content:space-between; align-items:center; }
+
+  .section-title button { background:transparent; border:none; color:#74829C; font-size:13px; cursor:pointer; }
+
+  /* Task card */
+  .card {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:white;
+    padding:10px;
+    border-radius:12px;
+    box-shadow: var(--card-shadow);
+    margin-top:10px;
+  }
+
+  .card.faded { opacity:0.55; }
+
+  .left-controls { display:flex; align-items:center; gap:8px; min-width:0; }
+  .task-meta { display:flex; flex-direction:column; overflow:hidden; min-width:0; }
+  .task-title { font-size:15px; font-weight:700; color:#1B2A41; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .task-time { font-size:12px; color:gray; margin-top:4px; }
+
+  /* Completed state */
+  .completed .task-title { text-decoration:line-through; color:#74829C; }
+  .completed .task-time { text-decoration:line-through; color:#9aa3b3; }
+
+  /* Checkbox + delete alignment */
+  .task-checkbox { width:18px; height:18px; accent-color:var(--accent); }
+  .delete-btn {
+    background:transparent;
+    border:none;
+    padding:6px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .delete-btn svg { width:16px; height:16px; display:block; }
+
+  /* Floating Add Button & Navbar */
+  .add-btn {
+    position: fixed;
+    bottom: 120px;
+    right: calc(50% - 160px + 16px);
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 30px;
+    cursor: pointer;
+    z-index:50;
+    box-shadow: 0 6px 18px rgba(60,141,255,0.22);
+  }
+
+  .bottom-nav {
+  height: 60px;
+  background: #FFFFFF;
+  border-top: 1px solid #E3F2FD;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
+}
+.bottom-nav a {
+  text-decoration: none;
+  font-size: 22px;
+  color: #90CAF9;
+  transition: 0.3s;
+}
+.bottom-nav a.active {
+  color: #1565C0;
+  transform: scale(1.15);
+}
+
+
+  /* Popup */
+  .popup { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.35); z-index:70; }
+  .popup-inner { background:white; width:92%; margin:70px auto; padding:14px; border-radius:12px; max-height:78vh; overflow:auto; }
+
+  input[type="text"], input[type="time"], select { width:100%; padding:8px; margin-top:8px; border-radius:8px; border:1px solid #ddd; box-sizing:border-box; }
+
+  .small { font-size:13px; color:#74829C; }
+
+  .btn { padding:10px; width:100%; border-radius:8px; border:none; font-weight:700; cursor:pointer; }
+  .btn-primary { background:var(--accent); color:white; }
+  .btn-muted { background:#ccc; color:#222; }
+
+  .add-section-row { display:flex; gap:8px; margin-top:8px; }
+  .add-section-row input { flex:1; }
+
+  @media (max-width:320px) { .viewport{transform:scale(1); transform-origin:top left;} }
+</style>
+</head>
+<body>
+  <div class="viewport" id="viewport">
+    <button class="back-btn" onclick="window.location.href='main.html'">←</button>
+
+    <div class="container">
+      <div class="header-row">
+        <div style="width:38px"></div>
+        <h1 class="header-title">Routine & Tasks</h1>
+        <div style="width:38px"></div>
+      </div>
+
+      <div class="tabs" role="tablist">
+        <button class="tab active" onclick="switchView('daily', event)">Daily</button>
+        <button class="tab" onclick="switchView('weekly', event)">Weekly</button>
+        <button class="tab" onclick="switchView('monthly', event)">Monthly</button>
+      </div>
+
+      <div id="calendarContainer" class="calendar"></div>
+
+      <div id="content"></div>
+    </div>
+
+    <button class="add-btn" onclick="openAddPopup()">+</button>
+
+    <!-- Add Task Popup -->
+    <div id="addPopup" class="popup" onclick="if(event.target===this) closeAddPopup();">
+      <div class="popup-inner">
+        <h3 style="margin:0 0 6px 0;">Add Task</h3>
+
+        <label class="small">Title</label>
+        <input id="taskTitle" type="text" placeholder="Task Title">
+
+        <!-- TIME PICKER (native scroll wheel) -->
+        <label class="small" style="margin-top:8px;">Time</label>
+        <input id="taskTime" type="time">
+
+        <!-- DATE PICKER BUTTON -->
+        <label class="small" style="margin-top:8px;">Date</label>
+        <button id="selectedDateBtn" onclick="openCalendar()" style="width:100%; padding:8px; border-radius:8px; border:1px solid #ddd; background:white; text-align:left;">
+          <span id="selectedDateLabel">Choose Date</span>
+        </button>
+
+        <!-- Section select (populated from sections list) -->
+        <label class="small" style="margin-top:8px;">Section</label>
+        <div style="display:flex; gap:8px;">
+          <select id="taskSection" style="flex:1; padding:8px; border-radius:8px; border:1px solid #ddd;">
+          </select>
+          <button title="Add section" onclick="openAddSectionPopup()" style="padding:8px; border-radius:8px; border:1px solid #ddd; background:white;">+</button>
+        </div>
+
+        <div style="height:8px"></div>
+
+        <button id="saveBtn" class="btn btn-primary">Save</button>
+        <button onclick="closeAddPopup()" class="btn btn-muted" style="margin-top:8px;">Cancel</button>
+      </div>
+    </div>
+
+    <!-- Custom Calendar Popup -->
+    <div id="calendarPopup" class="popup" onclick="if(event.target===this) closeCalendar();">
+      <div class="popup-inner" style="padding:0; overflow:hidden;">
+        <div style="background:var(--accent); color:white; padding:10px; text-align:center; font-weight:700;">
+          <span id="calMonthName"></span> <span id="calYear"></span>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; padding:10px 12px;">
+          <button onclick="prevMonth()" style="background:none; border:none; font-size:18px; cursor:pointer;">←</button>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <div class="small" id="calMonthYearLabel" style="color:#333;"></div>
+          </div>
+          <button onclick="nextMonth()" style="background:none; border:none; font-size:18px; cursor:pointer;">→</button>
+        </div>
+
+        <div style="padding:0 10px 10px;">
+          <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:4px; text-align:center; color:#6b7280; font-size:12px; margin-bottom:6px;">
+            <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+          </div>
+
+          <div id="calendarGrid" style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Section Popup -->
+    <div id="addSectionPopup" class="popup" onclick="if(event.target===this) closeAddSectionPopup();">
+      <div class="popup-inner">
+        <h3 style="margin:0 0 8px 0;">Add Section</h3>
+        <div class="add-section-row">
+          <input id="newSectionName" placeholder="Section name (e.g., Study)" type="text">
+          <button onclick="addSection()" style="padding:8px 10px; border-radius:8px; border:none; background:var(--accent); color:white;">Add</button>
+        </div>
+        <div style="height:12px;"></div>
+        <div class="small">Reorder or remove sections not implemented (keeps UI simple).</div>
+        <div style="height:12px;"></div>
+        <button onclick="closeAddSectionPopup()" class="btn btn-muted">Close</button>
+      </div>
+    </div>
+
+  <div class="bottom-nav">
+    <a href="achievemnts.html">🧠</a> 
+    <a href="habittracker.html">🧘</a>
+    <a href="profile.html">✍️</a>
+    <a href="#" class="active">🏠</a>
+    <a href="#">📊</a>
+  </div>
+<script>
+/* ---------------- Data & Storage ---------------- */
+let tasksRaw = JSON.parse(localStorage.getItem("tasks")) || null;
+
+/* We'll use a single store with tasks.all and sections[] */
+let tasks = {
+  all: [],
+  sections: ["morning","afternoon","evening","night"]
+};
+
+/* migrate old formats if detected */
+function migrateIfNeeded() {
+  if (!tasksRaw) { localStorage.setItem("tasks", JSON.stringify(tasks)); return; }
+
+  // If tasksRaw has .all and .sections already, adopt it
+  if (tasksRaw.all && Array.isArray(tasksRaw.all)) {
+    tasks = tasksRaw;
+    // ensure sections exist at least defaults
+    tasks.sections = Array.from(new Set([..."morning,afternoon,evening,night".split(","), ...(tasks.sections||[])]));
+    return;
+  }
+
+  // If old format has daily/weekly/monthly arrays, combine to tasks.all
+  if ((tasksRaw.daily || tasksRaw.weekly || tasksRaw.monthly) && !tasksRaw.all) {
+    const combined = [];
+    ["daily","weekly","monthly"].forEach(k => {
+      if (Array.isArray(tasksRaw[k])) {
+        tasksRaw[k].forEach(t => combined.push(t));
+      }
+    });
+    // use existing sections if present, else default
+    tasks.sections = tasksRaw.sections && Array.isArray(tasksRaw.sections) ? tasksRaw.sections : tasks.sections;
+    tasks.all = combined.map(t => {
+      if (!t.id) t.id = 't'+Date.now()+Math.floor(Math.random()*1000);
+      if (typeof t.completed === 'undefined') t.completed=false;
+      if (!t.section) t.section = "anytime";
+      return t;
+    });
+    saveAll();
+    return;
+  }
+
+  // otherwise, unknown: set defaults
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+migrateIfNeeded();
+
+/* helper save */
+function saveAll(){ localStorage.setItem("tasks", JSON.stringify(tasks)); }
+
+/* ---------------- Utilities ---------------- */
+function uid(){ return 't'+Date.now()+Math.floor(Math.random()*1000); }
+function escapeHtml(s){ return String(s||"").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function formatSectionName(s){
+  if (s==="anytime") return "To do anytime";
+  if (s==="morning") return "Morning";
+  if (s==="afternoon") return "Afternoon";
+  if (s==="evening") return "Evening";
+  if (s==="night") return "Night";
+  return s.charAt(0).toUpperCase()+s.slice(1);
+}
+
+/* ---------------- Views ---------------- */
+let currentView = "daily"; // daily | weekly | monthly
+function switchView(type, event){
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  if (event && event.target) event.target.classList.add("active");
+  currentView = type;
+  renderCalendar(type);
+  loadTasks(type);
+}
+
+/* calendar header messages */
+function renderCalendar(type){
+  const c = document.getElementById("calendarContainer");
+  if (type === "daily") {
+    c.innerHTML = `<div class="calendar">Today: ${new Date().toDateString()}</div>`;
+    return;
+  }
+  if (type === "weekly") {
+    const now = new Date();
+    const start = new Date(now); start.setDate(now.getDate() - now.getDay());
+    const end = new Date(start); end.setDate(start.getDate() + 6);
+    c.innerHTML = `<div class="calendar">Week: ${start.toDateString()} — ${end.toDateString()}</div>`;
+    return;
+  }
+  if (type === "monthly") {
+    const now = new Date();
+    const monthName = now.toLocaleString('default', { month: 'long' });
+    c.innerHTML = `<div class="calendar">${monthName} ${now.getFullYear()}</div>`;
+    return;
+  }
+}
+
+/* ---------------- Rendering tasks ---------------- */
+function loadTasks(type){
+  const container = document.getElementById("content");
+  container.innerHTML = "";
+
+  let list = Array.isArray(tasks.all) ? tasks.all.slice() : [];
+
+  // filter by view
+  if (type === "daily") {
+    const todayStr = (new Date()).toISOString().split('T')[0];
+    list = list.filter(t => !t.date || t.date === todayStr);
+  } else if (type === "weekly") {
+    const now = new Date();
+    const start = new Date(now); start.setDate(now.getDate() - now.getDay()); start.setHours(0,0,0,0);
+    const end = new Date(start); end.setDate(start.getDate() + 6); end.setHours(23,59,59,999);
+    list = list.filter(t => t.date && new Date(t.date) >= start && new Date(t.date) <= end);
+  } else if (type === "monthly") {
+    const now = new Date();
+    const month = now.getMonth();
+    const year = now.getFullYear();
+    list = list.filter(t => {
+      if (!t.date) return false;
+      const d = new Date(t.date);
+      return d.getMonth() === month && d.getFullYear() === year;
+    });
+  }
+
+  if (!list.length) {
+    container.innerHTML = "<p style='color:gray; margin-top:20px;'>No tasks stored.</p>";
+    return;
+  }
+
+  // group into sections
+  const sectionsMap = {};
+  tasks.sections.forEach(s => sectionsMap[s] = []);
+  // ensure 'anytime' bucket for tasks without a valid section
+  sectionsMap.anytime = [];
+
+  list.forEach(t => {
+    const sec = t.section && sectionsMap[t.section] ? t.section : 'anytime';
+    sectionsMap[sec].push(t);
+  });
+
+  // render each section in the order of tasks.sections (then anytime)
+  tasks.sections.forEach(sec => {
+    if (!sectionsMap[sec] || sectionsMap[sec].length === 0) return;
+    container.insertAdjacentHTML('beforeend', `<div class='section-title'><span>${formatSectionName(sec)}</span></div>`);
+    // sort incomplete first then completed (so completed go bottom)
+    sectionsMap[sec].sort((a,b) => (a.completed === b.completed) ? 0 : (a.completed ? 1 : -1));
+    sectionsMap[sec].forEach(task => {
+      container.insertAdjacentHTML('beforeend', renderTaskCard(task));
+      attachCardEvents(task.id);
+    });
+  });
+
+  // render anytime section if it has items
+  if (sectionsMap.anytime.length > 0) {
+    container.insertAdjacentHTML('beforeend', `<div class='section-title'><span>${formatSectionName('anytime')}</span></div>`);
+    sectionsMap.anytime.sort((a,b) => (a.completed === b.completed) ? 0 : (a.completed ? 1 : -1));
+    sectionsMap.anytime.forEach(task => {
+      container.insertAdjacentHTML('beforeend', renderTaskCard(task));
+      attachCardEvents(task.id);
+    });
+  }
+}
+
+/* create markup for one task */
+function renderTaskCard(task){
+  const cls = task.completed ? 'card completed faded' : 'card';
+  const titleSafe = escapeHtml(task.title || "");
+  const timeSafe = escapeHtml(task.time || "");
+  const dateLabel = task.date ? `<div style="font-size:11px;color:#9aa3b3;margin-top:4px;">${new Date(task.date).toDateString()}</div>` : "";
+  return `
+    <div class="${cls}" data-id="${task.id}">
+      <div class="left-controls" style="width:100%;">
+        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} aria-label="Complete task">
+        <button class="delete-btn" aria-label="Delete task" title="Delete">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M3 6h18" stroke="#333" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 11v6" stroke="#333" stroke-width="1.6" stroke-linecap="round"/>
+            <path d="M14 11v6" stroke="#333" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="task-meta">
+          <div class="task-title">${titleSafe}</div>
+          <div class="task-time">${timeSafe}</div>
+          ${dateLabel}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+/* ---------------- Events for each card ---------------- */
+function attachCardEvents(id){
+  const card = document.querySelector(`.card[data-id="${id}"]`);
+  if (!card) return;
+  const checkbox = card.querySelector('.task-checkbox');
+  const deleteBtn = card.querySelector('.delete-btn');
+
+  checkbox.addEventListener('change', (e) => {
+    setComplete(id, e.target.checked);
+  });
+
+  deleteBtn.addEventListener('click', () => {
+    removeTask(id);
+  });
+}
+
+/* ---------------- Set complete & reorder ---------------- */
+function setComplete(id, completed){
+  const idx = tasks.all.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  tasks.all[idx].completed = !!completed;
+  // reorder: remove and insert to bottom of same section
+  const item = tasks.all.splice(idx,1)[0];
+  if (item.completed) {
+    tasks.all.push(item);
+  } else {
+    // find first completed in same section to insert before, else push at end of section
+    let insertAt = tasks.all.length;
+    for (let i=0;i<tasks.all.length;i++){
+      if (tasks.all[i].section === item.section && tasks.all[i].completed) { insertAt = i; break; }
+    }
+    tasks.all.splice(insertAt,0,item);
+  }
+  saveAll();
+  loadTasks(currentView);
+}
+
+/* ---------------- Remove task ---------------- */
+function removeTask(id){
+  const idx = tasks.all.findIndex(t => t.id === id);
+  if (idx === -1) return;
+  tasks.all.splice(idx,1);
+  saveAll();
+  loadTasks(currentView);
+}
+
+/* ---------------- Add Task popup logic ---------------- */
+let selectedDate = null;
+function openAddPopup(){ 
+  populateSectionSelect();
+  document.getElementById("addPopup").style.display = "block";
+}
+function closeAddPopup(){ document.getElementById("addPopup").style.display = "none"; }
+
+function populateSectionSelect(){
+  const sel = document.getElementById("taskSection");
+  sel.innerHTML = "";
+  tasks.sections.forEach(s => {
+    const opt = document.createElement('option'); opt.value = s; opt.textContent = formatSectionName(s);
+    sel.appendChild(opt);
+  });
+  // add 'anytime' as option
+  const anytimeOpt = document.createElement('option'); anytimeOpt.value='anytime'; anytimeOpt.textContent='To do anytime';
+  sel.appendChild(anytimeOpt);
+}
+
+document.getElementById("saveBtn").addEventListener('click', ()=>{
+  const title = document.getElementById("taskTitle").value.trim();
+  const time = document.getElementById("taskTime").value;
+  const section = document.getElementById("taskSection").value || "anytime";
+
+  if (!title) { alert("Enter task title"); return; }
+  if (!selectedDate) { alert("Choose a date"); return; }
+
+  const dateStr = selectedDate.toISOString().split("T")[0]; // YYYY-MM-DD
+  const newTask = { id: uid(), title, time, section, date: dateStr, completed:false };
+  tasks.all.push(newTask);
+  saveAll();
+
+  // reset fields
+  document.getElementById("taskTitle").value = "";
+  document.getElementById("taskTime").value = "";
+  document.getElementById("taskSection").value = "anytime";
+  selectedDate = null;
+  document.getElementById("selectedDateLabel").innerText = "Choose Date";
+
+  closeAddPopup();
+  loadTasks(currentView);
+});
+
+/* ---------------- Add Section popup ---------------- */
+function openAddSectionPopup(){ document.getElementById("addSectionPopup").style.display = "block"; document.getElementById("newSectionName").value = ""; }
+function closeAddSectionPopup(){ document.getElementById("addSectionPopup").style.display = "none"; }
+
+function addSection(){
+  const name = document.getElementById("newSectionName").value.trim();
+  if (!name) { alert("Enter a section name"); return; }
+  const key = name.toLowerCase().replace(/\s+/g,'-');
+  if (!tasks.sections.includes(key)) {
+    tasks.sections.push(key);
+    saveAll();
+  }
+  closeAddSectionPopup();
+  populateSectionSelect();
+  loadTasks(currentView);
+}
+
+/* ---------------- Calendar popup logic ---------------- */
+let currentCalendarDate = new Date();
+
+function openCalendar(){
+  document.getElementById("calendarPopup").style.display = "block";
+  renderCalendarGrid(currentCalendarDate);
+}
+function closeCalendar(){
+  document.getElementById("calendarPopup").style.display = "none";
+}
+
+function prevMonth(){ currentCalendarDate.setMonth(currentCalendarDate.getMonth()-1); renderCalendarGrid(currentCalendarDate); }
+function nextMonth(){ currentCalendarDate.setMonth(currentCalendarDate.getMonth()+1); renderCalendarGrid(currentCalendarDate); }
+
+function renderCalendarGrid(dateObj){
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+
+  document.getElementById("calMonthName").innerText = dateObj.toLocaleString('default',{month:'long'});
+  document.getElementById("calYear").innerText = year;
+  document.getElementById("calMonthYearLabel").innerText = `${dateObj.toLocaleString('default',{month:'short'})} ${year}`;
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const totalDays = new Date(year, month+1, 0).getDate();
+  const grid = document.getElementById("calendarGrid");
+  grid.innerHTML = "";
+
+  // blanks
+  for (let i=0;i<firstDay;i++) grid.innerHTML += `<div></div>`;
+
+  for (let d=1; d<=totalDays; d++){
+    const dt = new Date(year, month, d);
+    const iso = dt.toISOString().split('T')[0];
+    const todayIso = (new Date()).toISOString().split('T')[0];
+    const cls = iso === todayIso ? 'style="background:#e7f0ff;border-radius:6px;padding:8px;cursor:pointer;font-weight:700;"' : 'style="background:#f4f4f4;border-radius:6px;padding:8px;cursor:pointer;"';
+    grid.innerHTML += `<div ${cls} onclick="selectDate(${year},${month},${d})">${d}</div>`;
+  }
+}
+
+/* select date from calendar */
+function selectDate(y,m,d){
+  selectedDate = new Date(y,m,d);
+  document.getElementById("selectedDateLabel").innerText = selectedDate.toDateString();
+  closeCalendar();
+}
+
+/* ---------------- Init & Helpers ---------------- */
+
+/* seed sample tasks if none exist */
+if (!tasks.all || tasks.all.length === 0) {
+  tasks.all = [
+    { id: 't-sample-1', title: 'Morning yoga', time: '07:00', section: 'morning', date: (new Date()).toISOString().split('T')[0], completed:false },
+    { id: 't-sample-2', title: 'Read book', time: '15:00', section: 'afternoon', date: (new Date()).toISOString().split('T')[0], completed:false }
+  ];
+  saveAll();
+}
+
+/* initial render */
+renderCalendar(currentView);
+populateSectionSelect();
+loadTasks(currentView);
+
+/* expose switchView for tabs used earlier */
+window.switchView = switchView;
+
+/* small helper to ensure UI stays consistent on load */
+window.addEventListener('storage', ()=> { tasks = JSON.parse(localStorage.getItem('tasks')) || tasks; loadTasks(currentView); });
+
+</script>
+</body>
+</html>

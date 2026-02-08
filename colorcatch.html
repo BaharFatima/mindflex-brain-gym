@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Color Catch</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Poppins", sans-serif;
+    background: linear-gradient(180deg, #E3F2FD, #FFFFFF);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    color: #1565C0;
+    overflow-x: hidden;
+  }
+
+  header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 25px 0 10px 0;
+    z-index: 10;
+  }
+  .page-title {
+    font-weight: 600;
+    font-size: 22px;
+    color: #1565C0;
+  }
+  .back-btn {
+    position: absolute;
+    left: 20px;
+    color: #1565C0;
+    text-decoration: none;
+    font-size: 24px;
+    z-index: 2;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    padding: 6px 10px;
+    transition: background 0.3s;
+  }
+  .back-btn:hover {
+    background: rgba(255,255,255,0.9);
+  }
+
+  .instruction {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #0D47A1;
+    text-align: center;
+  }
+
+  .target {
+    font-weight: 600;
+    font-size: 18px;
+    color: #1565C0;
+    margin: 20px 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 90px);
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+
+  .color-box {
+    width: 90px;
+    height: 90px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .color-box:hover {
+    transform: scale(1.05);
+  }
+
+  .level-display {
+    margin-top: 25px;
+    font-size: 18px;
+    color: #0D47A1;
+  }
+
+  .next-btn {
+    margin-top: 20px;
+    background: #1565C0;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+  }
+  .next-btn:hover {
+    background: #0D47A1;
+  }
+
+  .message {
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <a href="../focuslab.html" class="back-btn">←</a>
+  <span class="page-title">Color Catch</span>
+</header>
+
+<div class="instruction">Tap the correct color as quickly as you can!</div>
+<div class="target" id="targetText"></div>
+
+<div class="grid" id="colorGrid"></div>
+
+<div class="level-display" id="levelText">Level 1</div>
+<div class="message" id="message"></div>
+<button class="next-btn" id="nextBtn">Next Level</button>
+<script src="logistic.js"></script>
+<script>
+  const colors = [
+    {name: "Red", hex: "#EF5350"},
+    {name: "Blue", hex: "#42A5F5"},
+    {name: "Green", hex: "#66BB6A"},
+    {name: "Yellow", hex: "#FFEE58"},
+    {name: "Purple", hex: "#AB47BC"},
+    {name: "Orange", hex: "#FFA726"},
+    {name: "Pink", hex: "#F06292"},
+    {name: "Teal", hex: "#26A69A"},
+  ];
+
+  const maxLevel = 30;
+  let level = parseInt(localStorage.getItem('colorCatchLevel')) || 1;
+
+  const grid = document.getElementById('colorGrid');
+  const targetText = document.getElementById('targetText');
+  const message = document.getElementById('message');
+  const levelText = document.getElementById('levelText');
+  const nextBtn = document.getElementById('nextBtn');
+
+  function startLevel() {
+    grid.innerHTML = "";
+    nextBtn.style.display = "none";
+    message.textContent = "";
+    levelText.textContent = "Level " + level;
+
+    const numberOfColors = Math.min(3 + Math.floor(level / 2), 9);
+    const shuffled = shuffle(colors).slice(0, numberOfColors);
+    const target = shuffled[Math.floor(Math.random() * shuffled.length)];
+    targetText.textContent = `Find: ${target.name}`;
+    targetText.style.color = target.hex;
+
+    shuffled.forEach(c => {
+      const div = document.createElement("div");
+      div.classList.add("color-box");
+      div.style.background = c.hex;
+      div.onclick = () => checkColor(c.hex, target.hex, div);
+      grid.appendChild(div);
+    });
+  }
+
+  function checkColor(selected, target, box) {
+    if (selected === target) {
+      box.style.border = "4px solid #4CAF50";
+      message.textContent = "✅ Correct!";
+      nextBtn.style.display = "block";
+    } else {
+      box.style.border = "4px solid #E53935";
+      message.textContent = "❌ Try again!";
+    }
+  }
+
+  function shuffle(arr) {
+    return arr.sort(() => Math.random() - 0.5);
+  }
+
+  nextBtn.addEventListener("click", () => {
+    if (level < maxLevel) {
+      level++;
+      localStorage.setItem('colorCatchLevel', level);
+      startLevel();
+    } else {
+      levelText.textContent = "🎉 All Levels Complete!";
+      nextBtn.style.display = "none";
+    }
+  });
+
+  startLevel();
+</script>
+
+</body>
+</html>

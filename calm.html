@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calm Space</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(180deg, #a7d8ff 0%, #d3eaff 100%);
+  height: 100vh;
+}
+
+.app-container {
+  width: 320px;
+  height: 640px;
+  background-color: #e7f4ff;
+  border-radius: 40px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Back Button on main page */
+.back-btn {
+    position: absolute;
+    top: 20px;
+    left: 15px;
+    background: #1565C0;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Header */
+.header {
+  padding: 35px 20px 50px 20px; 
+  position: relative;
+  background: linear-gradient(180deg, #a7d8ff 0%, #c8e6ff 100%);
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.header h1 { font-size: 26px; font-weight: 700; color: #0f355d; margin: 0; }
+.header p { font-size: 14px; color: #234a77; margin-top: 8px; }
+
+/* Baymax */
+.baymax {
+  position: absolute;
+  top: 50px; 
+  right: 20px;
+  width: 100px; 
+  height: 100px;
+  animation: headerBreathe 4s infinite alternate;
+}
+.baymax img { width: 100%; border-radius: 50%; }
+@keyframes headerBreathe { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  padding: 20px;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+.card {
+  background-color: #f5fcff;
+  border-radius: 20px;
+  padding: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 140px;
+}
+.card h3 { font-size: 15px; color: #0f355d; margin: 0 0 8px 0; }
+.card p { font-size: 12px; color: #486b91; margin: 0 0 10px 0; }
+.card button { background-color:#007bff; color:white; border:none; padding:6px 14px; border-radius:10px; font-size:13px; cursor:pointer; }
+
+/* Modals */
+.modal {
+  position: fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  display: none;
+  background: #e7f4ff;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 50px;
+  z-index: 100;
+  overflow-y: auto;
+}
+.modal h2 { color:#0f355d; margin-bottom:12px; text-align:center; }
+.modal p { font-size:14px; color:#234a77; text-align:center; margin:10px 20px; }
+.start-btn, .back-btn {
+  background-color:#007bff;
+  color:white;
+  border:none;
+  padding:8px 18px;
+  border-radius:12px;
+  margin-top:15px;
+  font-size:14px;
+  cursor:pointer;
+}
+
+/* Breathing animation */
+.breathe-container { display:flex; flex-direction:column; align-items:center; margin-top:20px; position:relative; }
+.breathe-buddy { width:180px; height:180px; z-index:1; }
+.breathe-circle {
+  position:absolute;
+  border-radius:50%;
+  background-color:#007bff33;
+  width:180px; height:180px;
+  display:flex; justify-content:center; align-items:center;
+  font-weight:600; color:#0f355d;
+  z-index:0;
+  animation: breatheInOut 4s infinite alternate;
+}
+@keyframes breatheInOut {
+  0% { transform: scale(1); opacity:0.6; }
+  50% { transform: scale(1.4); opacity:0.8; }
+  100% { transform: scale(1); opacity:0.6; }
+}
+
+/* Technique container */
+.tech-container {
+  width:90%; height:auto;
+  border-radius:20px;
+  background: #f0f8ff;
+  margin:20px 0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  font-size:16px;
+  color:#0f355d;
+  text-align:center;
+  padding:15px;
+}
+.tech-list {
+  text-align:left;
+  margin-top:10px;
+}
+.tech-list li { margin:6px 0; }
+
+/* bubbles in technique modals */
+.bubble {
+  position: absolute;
+  background: rgba(0,123,255,0.2);
+  border-radius: 50%;
+  animation: floatUp 10s infinite;
+}
+@keyframes floatUp {
+  0% { transform: translateY(100%); opacity:0.3; }
+  50% { opacity:0.6; }
+  100% { transform: translateY(-50%); opacity:0; }
+}
+</style>
+</head>
+<body>
+
+<div class="app-container">
+
+  <!-- Main Back Button -->
+  <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+
+  <div class="header">
+    <h1>Calm Space</h1>
+    <p>Recharge your mind and emotions in small, mindful moments.</p>
+    <div class="baymax">
+      <img src="https://upload.wikimedia.org/wikipedia/en/0/0e/Baymax_%28Disney_character%29.png" alt="Baymax">
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Breathe with Me</h3>
+      <p>Follow guided breathing rhythms.</p>
+      <button onclick="openModal('breatheModal')">Start</button>
+    </div>
+    <h1>🎵 Sound Haven</h1>
+<p>Listen to soothing calm sounds from YouTube.</p>
+<button class="back-btn" onclick="window.location.href='index.html'">← Back to Calm Space</button>
+
+<div class="sound-list">
+  <div class="sound-card">
+    <h3>Ocean Waves 🌊</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/rET3lp6kk2E?si=C3mg7TDKwZusjBXw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card" id="buddy-card" style="text-align:center; padding:30px;">
+  <h3>Buddy Breathing 🫂</h3>
+  <p>Click Enter to start the guided breathing exercise with Buddy.</p>
+
+  <button id="enter-btn" style="padding:10px 20px; border:none; border-radius:10px; background:#00b4d8; color:white; cursor:pointer; margin-top:15px;">Enter</button>
+  <button class="back-btn" onclick="window.location.href='index.html'" style="margin-top:15px; display:block;">← Back</button>
+
+  <!-- Breathing container hidden initially -->
+  <div class="breathing-container" id="breathing-container" style="display:none; margin-top:20px;">
+    <img src="baymax.png" alt="Baymax" class="baymax-img">
+    <div class="breathing-circle"></div>
+    <p class="breathing-text">Inhale...</p>
+
+    <div class="controls" style="margin-top:15px;">
+      <button id="start-stop-btn" style="padding:8px 15px; border:none; border-radius:8px; background:#00b4d8; color:white; cursor:pointer;">Start</button>
+      <button id="fullscreen-btn" style="padding:8px 15px; border:none; border-radius:8px; background:#023e8a; color:white; cursor:pointer;">Full Screen</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .breathing-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .baymax-img {
+    width: 120px;
+    margin-bottom: 10px;
+  }
+  .breathing-circle {
+    width: 120px;
+    height: 120px;
+    background-color: #00b4d8;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    transition: all 4s ease-in-out;
+  }
+  .breathing-text {
+    font-size: 1.2em;
+    color: #023e8a;
+    font-weight: 500;
+  }
+  .back-btn {
+    background-color: #00b4d8;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 15px;
+    cursor: pointer;
+  }
+  .fullscreen {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw !important;
+    height: 100vh !important;
+    background: linear-gradient(to bottom, #caf0f8, #ade8f4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 9999;
+  }
+  .fullscreen .breathing-container {
+    transform: scale(1.5);
+  }
+</style>
+
+<script>
+  const enterBtn = document.getElementById('enter-btn');
+  const breathingContainer = document.getElementById('breathing-container');
+  const startStopBtn = document.getElementById('start-stop-btn');
+  const fullscreenBtn = document.getElementById('fullscreen-btn');
+  const circle = breathingContainer.querySelector('.breathing-circle');
+  const text = breathingContainer.querySelector('.breathing-text');
+
+  let interval;
+  let inhale = true;
+  let running = false;
+
+  // Show breathing exercise on Enter click
+  enterBtn.addEventListener('click', () => {
+    breathingContainer.style.display = 'flex';
+    enterBtn.style.display = 'none';
+  });
+
+  // Start / Stop breathing animation
+  startStopBtn.addEventListener('click', () => {
+    if(running) {
+      clearInterval(interval);
+      running = false;
+      startStopBtn.textContent = 'Start';
+    } else {
+      interval = setInterval(() => {
+        if(inhale) {
+          circle.style.transform = 'scale(1.5)';
+          text.textContent = 'Exhale...';
+        } else {
+          circle.style.transform = 'scale(1)';
+          text.textContent = 'Inhale...';
+        }
+        inhale = !inhale;
+      }, 4000);
+      running = true;
+      startStopBtn.textContent = 'Stop';
+    }
+  });
+
+  // Fullscreen functionality
+  fullscreenBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!document.fullscreenElement) {
+      breathingContainer.requestFullscreen().catch(err => {
+        alert(`Error attempting to enable full-screen mode: ${err.message}`);
+      });
+    } else {
+      document.exitFullscreen();
+    }
+  });
+</script>
+
+
+  <div class="sound-card">
+    <h3>Forest Ambience 🌲</h3>
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/Qm846KdZN_c?si=49Hx2ShCYjeI7tn_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Soft Rain ☔</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/q76bMs-NwRk?si=sgEmhLPGPdw7E1dc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Wind Chimes 🌬️</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/oWxFwmuG21g?si=ri1xvCI-cvooqnm-&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Peaceful Piano 🎹</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/3NycM9lYdRI?si=Laqcnb_at-ZjlEfy&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>" allow="autoplay; encrypted-media"></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Mountain Stream 💧</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/aVS7PHjSxdI?si=YWMCQLBvXa0Mg9r-&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Morning Birds 🕊️</h3>
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/zwenk-MvUWc?si=ejZ3yajCEsfrbMVF&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Night Crickets 🌌</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/7GoXVDH656g?si=RPEPCSFqYZnMcz9t&amp;start=24" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+
+  <div class="sound-card">
+    <h3>Tibetan Singing Bowls 🕉️</h3>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/TAESZsLJdVw?si=d8e6FeeC02WSi_xu&amp;start=11" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+  </div>
+</div>
+    <div class="card">
+      <h3>Relaxing Massages</h3>
+      <p>Self-massage techniques for tension relief.</p>
+      <button onclick="openModal('massageModal')">Start</button>
+    </div>
+    <div class="card">
+      <h3>Stretch & Move</h3>
+      <p>Simple stretches to release tension.</p>
+      <button onclick="openModal('stretchModal')">Start</button>
+    </div>
+    <div class="card">
+      <h3>Sound Haven</h3>
+      <p>Play calming sounds.</p>
+      <button onclick="openModal('soundModal')">Listen</button>
+      <p id="soundPreset" style="margin-top:6px; font-size:12px; color:#486b91;">— Ready —</p>
+    </div>
+  </div>
+</div>
+
+<!-- Modals -->
+<div class="modal" id="breatheModal">
+  <h2>Breathe with Me</h2>
+  <div class="breathe-container">
+    <div class="breathe-circle"></div>
+    <img class="breathe-buddy" src="https://upload.wikimedia.org/wikipedia/en/0/0e/Baymax_%28Disney_character%29.png" alt="Baymax">
+  </div>
+  <p id="breatheText">Inhale...</p>
+  <button class="back-btn" onclick="closeModal('breatheModal')">Back</button>
+</div>
+
+<div class="modal" id="mindModal">
+  <h2>Mind Ease</h2>
+  <div class="tech-container" id="mindTechContainer"></div>
+  <button class="back-btn" onclick="closeModal('mindModal')">Back</button>
+</div>
+
+<div class="modal" id="massageModal">
+  <h2>Relaxing Massages</h2>
+  <div class="tech-container" id="massageTechContainer"></div>
+  <button class="back-btn" onclick="closeModal('massageModal')">Back</button>
+</div>
+
+<div class="modal" id="stretchModal">
+  <h2>Stretch & Move</h2>
+  <div class="tech-container" id="stretchTechContainer"></div>
+  <button class="back-btn" onclick="closeModal('stretchModal')">Back</button>
+</div>
+
+<div class="modal" id="soundModal">
+  <h2>Sound Haven</h2>
+  <div class="tech-container" style="position:relative; height:250px;">
+    <p>Enjoy calming sounds.</p>
+    <!-- bubbles -->
+    <div class="bubble" style="width:20px; height:20px; left:20px; bottom:0;"></div>
+    <div class="bubble" style="width:15px; height:15px; left:60px; bottom:0;"></div>
+    <div class="bubble" style="width:25px; height:25px; left:120px; bottom:0;"></div>
+    <div class="bubble" style="width:18px; height:18px; left:200px; bottom:0;"></div>
+  </div>
+  <button class="back-btn" onclick="closeModal('soundModal')">Back</button>
+  <p id="soundPreset" style="margin-top:10px; font-size:12px; color:#486b91;">— Ready —</p>
+</div>
+
+<script>
+// Modal functions
+function openModal(id) {
+  document.getElementById(id).style.display = 'flex';
+
+  // Randomize techniques each time modal opens
+  if(id === 'mindModal'){
+    const randomFact = mindTechs[Math.floor(Math.random()*mindTechs.length)];
+    document.getElementById('mindTechContainer').innerText = randomFact;
+  }
+  if(id === 'massageModal'){
+    document.getElementById('massageTechContainer').innerHTML = "<ul class='tech-list'>" + massageTechs.sort(()=>0.5-Math.random()).map(t=>"<li>"+t+"</li>").join("")+"</ul>";
+  }
+  if(id === 'stretchModal'){
+    document.getElementById('stretchTechContainer').innerHTML = "<ul class='tech-list'>" + stretchTechs.sort(()=>0.5-Math.random()).map(t=>"<li>"+t+"</li>").join("")+"</ul>";
+  }
+
+  // Start breathing or sound if needed
+  if(id==='breatheModal'){ startBreathing(); }
+  if(id==='soundModal'){ startSoundHaven(); }
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display='none';
+  if(id==='breatheModal'){ clearInterval(breatheInterval); }
+  if(id==='soundModal'){ stopSound(); }
+}
+
+// Breathing animation
+let breatheText = document.getElementById('breatheText');
+let breatheInterval;
+function startBreathing(){
+  let inhale = true;
+  breatheText.innerText = "Inhale...";
+  breatheInterval = setInterval(()=>{
+    breatheText.innerText = inhale ? "Inhale..." : "Exhale...";
+    inhale = !inhale;
+  }, 4000);
+}
+
+// Techniques facts randomization
+const mindTechs = [
+  "“Let your thoughts float by without judgment.”",
+  "“Focus on the colors around you to ease your mind.”",
+  "“Notice each breath as it enters and leaves your body.”"
+];
+const massageTechs = [
+  "Rub your temples gently.",
+  "Massage your neck and shoulders.",
+  "Press and roll your hands and fingers.",
+  "Apply gentle pressure on your jaw muscles."
+];
+const stretchTechs = [
+  "Neck rolls and side stretches.",
+  "Shoulder shrugs and arm stretches.",
+  "Forward bends and back stretches.",
+  "Leg stretches while sitting or standing."
+];
+
+document.getElementById('mindTechContainer').innerText = mindTechs[Math.floor(Math.random()*mindTechs.length)];
+document.getElementById('massageTechContainer').innerHTML = "<ul class='tech-list'>" + massageTechs.sort(()=>0.5-Math.random()).map(t=>"<li>"+t+"</li>").join("")+"</ul>";
+document.getElementById('stretchTechContainer').innerHTML = "<ul class='tech-list'>" + stretchTechs.sort(()=>0.5-Math.random()).map(t=>"<li>"+t+"</li>").join("")+"</ul>";
+
+// Sound Haven
+const soundPresetLabel = document.getElementById('soundPreset');
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+let ctx = null;
+let current = null;
+let lastIndex = -1;
+
+function ensureCtx() {
+  if (!ctx) {
+    ctx = new AudioContext();
+    if (ctx.state === 'suspended') ctx.resume();
+  }
+}
+
+function createGain(vol = 0.2) {
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0.0001, ctx.currentTime);
+  g.gain.exponentialRampToValueAtTime(Math.max(0.0001, vol), ctx.currentTime + 0.6);
+  return g;
+}
+
+function createPinkNoise() {
+  const bufferSize = 4096;
+  const node = ctx.createScriptProcessor(bufferSize, 1, 1);
+  let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
+  node.onaudioprocess = function(e) {
+    const output = e.outputBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      b0 = 0.99886 * b0 + white * 0.0555179;
+      b1 = 0.99332 * b1 + white * 0.0750759;
+      b2 = 0.96900 * b2 + white * 0.1538520;
+      b3 = 0.86650 * b3 + white * 0.3104856;
+      b4 = 0.55000 * b4 + white * 0.5329522;
+      b5 = -0.7616 * b5 - white * 0.0168980;
+      output[i] = b0 + b1 + b2 + b3 + b4 + b5 + b6 + white * 0.5362;
+      output[i] *= 0.11;
+      b6 = white * 0.115926;
+    }
+  };
+  return node;
+}
+
+const presets = [
+  {
+    name: '432 Hz Tone',
+    start: () => {
+      const gain = createGain(0.12);
+      const osc = ctx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.value = 432;
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      return { nodes: [osc], gainNode: gain };
+    }
+  },
+  {
+    name: 'Soft Pink Noise',
+    start: () => {
+      const gain = createGain(0.14);
+      const noise = createPinkNoise();
+      noise.connect(gain);
+      gain.connect(ctx.destination);
+      return { nodes: [noise], gainNode: gain };
+    }
+  }
+];
+
+function startSoundHaven() {
+  ensureCtx();
+  if(current){ stopSound(); setTimeout(()=>playRandomPreset(),700); } else { playRandomPreset(); }
+}
+
+function playRandomPreset(){
+  if(!ctx) return;
+  let idx=Math.floor(Math.random()*presets.length);
+  if(presets.length>1){ let tries=0; while(idx===lastIndex && tries<10){ idx=Math.floor(Math.random()*presets.length); tries++; } }
+  lastIndex=idx;
+  const preset=presets[idx];
+  stopSound();
+  current=preset.start();
+  soundPresetLabel.textContent=preset.name;
+  current.autoStopTimeout=setTimeout(()=>stopSound(),150000);
+}
+
+function stopSound(){
+  if(!current) return;
+  try{
+    if(current.gainNode){ current.gainNode.gain.cancelScheduledValues(ctx.currentTime); current.gainNode.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+1.2); }
+    setTimeout(()=>{ if(current.nodes) current.nodes.forEach(n=>{ try{ n.disconnect&&n.disconnect(); }catch(e){} }); current=null; soundPresetLabel.textContent='— Ready —'; },1400);
+  } catch(e){ current=null; }
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Flashcard Decks</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+  html,body{height:100%;background:linear-gradient(135deg,#dceeff,#a6d9ff);
+            display:flex;align-items:center;justify-content:center;}
+  .app{width:320px;height:640px;background:#f0f7ff;border-radius:25px;
+       box-shadow:0 10px 25px rgba(0,80,160,0.2);overflow:hidden;
+       display:flex;flex-direction:column;position:relative;}
+  header{background:#e6f3ff;padding:15px 20px;display:flex;
+         justify-content:space-between;align-items:center;color:#003366;}
+  main{flex:1;padding:20px;text-align:center;overflow-y:auto;}
+  h2{color:#003366;margin-bottom:15px;}
+  .deck-btn{background:linear-gradient(135deg,#66b2ff,#a3d5ff);border:none;
+            color:white;border-radius:12px;padding:12px;width:100%;
+            margin:10px 0;font-size:1rem;cursor:pointer;transition:transform .2s;}
+  .deck-btn:hover{transform:scale(1.05);}
+  .add-btn{position:absolute;bottom:70px;right:20px;background:#0077cc;
+           color:white;border:none;border-radius:50%;width:45px;height:45px;
+           font-size:1.6rem;cursor:pointer;box-shadow:0 3px 8px rgba(0,0,0,0.2);}
+  footer{position:absolute;left:0;right:0;bottom:0;background:#ffffff;
+         border-radius:12px 12px 0 0;display:flex;justify-content:space-around;
+         align-items:center;height:45px;box-shadow:0 -3px 8px rgba(0,0,0,0.1);}
+  .menu-item{display:flex;align-items:center;justify-content:center;flex:1;}
+  .menu-icon{width:30px;height:30px;border-radius:50%;display:flex;
+             align-items:center;justify-content:center;background:#f0f2f5;
+             color:#5f6368;transition:all .18s ease;}
+  .menu-item.selected .menu-icon{width:34px;height:34px;transform:translateY(-3px);
+                                 box-shadow:0 3px 8px rgba(0,0,0,0.12);color:#fff;}
+  .menu-item:nth-child(3).selected .menu-icon{background:#ff9800;}
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <a href="Studyzone.html" style="text-decoration:none;color:#003366;font-size:1.4rem;">←</a>
+      <h3>Flashcards</h3>
+      <div></div>
+    </header>
+
+    <main>
+      <h2>Your Decks</h2>
+      <div id="deckList"></div>
+    </main>
+
+    <button class="add-btn" onclick="window.location.href='createDeck.html'">+</button>
+
+    <footer>
+      <div class="menu-item"><div class="menu-icon"><i class="fas fa-home"></i></div></div>
+      <div class="menu-item"><div class="menu-icon"><i class="fas fa-gamepad"></i></div></div>
+      <div class="menu-item selected"><div class="menu-icon"><i class="fas fa-book"></i></div></div>
+      <div class="menu-item"><div class="menu-icon"><i class="fas fa-lightbulb"></i></div></div>
+      <div class="menu-item"><div class="menu-icon"><i class="fas fa-user-circle"></i></div></div>
+    </footer>
+  </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script>
+function loadDecks(){
+  const decks = JSON.parse(localStorage.getItem('customDecks') || '[]');
+  const list = document.getElementById('deckList');
+  list.innerHTML = '';
+
+  if(decks.length === 0){
+    const msg=document.createElement('p');
+    msg.textContent="No decks yet. Tap + to create one!";
+    msg.style.color="#003366";
+    msg.style.fontSize="0.9rem";
+    list.appendChild(msg);
+  } else {
+    decks.forEach((deck,i)=>{
+      const container=document.createElement('div');
+      container.style.display='flex';
+      container.style.justifyContent='space-between';
+      container.style.alignItems='center';
+      container.style.marginBottom='10px';
+      
+      const nameBtn=document.createElement('button');
+      nameBtn.textContent=deck.name;
+      nameBtn.className='deck-btn';
+      nameBtn.style.flex='1';
+      nameBtn.onclick=()=>{
+        localStorage.setItem('selectedDeck', JSON.stringify(deck.cards));
+        window.location.href='flashcards.html';
+      };
+
+      const editBtn=document.createElement('button');
+      editBtn.innerHTML='✏️';
+      editBtn.style.marginLeft='8px';
+      editBtn.style.background='#ffb74d';
+      editBtn.style.border='none';
+      editBtn.style.borderRadius='8px';
+      editBtn.style.padding='8px';
+      editBtn.style.cursor='pointer';
+      editBtn.onclick=()=>{
+        localStorage.setItem('editDeckIndex', i);
+        window.location.href='editDeck.html';
+      };
+
+      container.appendChild(nameBtn);
+      container.appendChild(editBtn);
+      list.appendChild(container);
+    });
+  }
+}
+loadDecks();
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MindFlex - Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(180deg, #B3E5FC 0%, #E1F5FE 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+.container {
+  width: 320px;
+  height: 640px;
+  border-radius: 30px;
+  background: linear-gradient(180deg, #BBDEFB 0%, #E3F2FD 100%);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* Header */
+.header {
+  padding: 25px 20px 10px;
+  color: #0D47A1;
+  position: relative;
+}
+.header h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+.header span {
+  font-weight: 700;
+  font-size: 20px;
+}
+.weather {
+  position: absolute;
+  top: 25px;
+  right: 20px;
+  text-align: right;
+  font-size: 13px;
+  color: #0D47A1;
+  opacity: 0.85;
+}
+.weather span {
+  display: block;
+  font-size: 11px;
+}
+
+/* Baymax */
+.baymax-section {
+  text-align: center;
+  margin-top: 5px;
+}
+.baymax-img {
+  width: 120px;
+  height: auto;
+  animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  padding: 0 20px 10px;
+}
+.card {
+  background: #ffffff;
+  border-radius: 20px;
+  height: 100px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #1565C0;
+  font-weight: 600;
+  font-size: 13px;
+  transition: 0.25s;
+  border: 2px solid #E3F2FD;
+  cursor: pointer;
+}
+.card:hover {
+  transform: translateY(-2px);
+  background: #F0F9FF;
+}
+.card span {
+  font-size: 25px;
+  margin-bottom: 6px;
+}
+
+/* Bottom Nav - New Styles */
+.bottom-nav {
+  height: 60px;
+  background: #FFFFFF;
+  border-top: 1px solid #E3F2FD;
+  border-radius: 20px 20px 0 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
+  padding: 8px 5px;
+  position: relative;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 2px;
+  position: relative;
+  flex: 1;
+  text-decoration: none;
+}
+
+.menu-icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  color: #90CAF9;
+}
+
+.menu-icon i {
+  font-size: 18px;
+  transition: all 0.3s ease;
+}
+
+.menu-label {
+  font-size: 9px;
+  /* CHANGED TO DARK BLUE AND BOLD */
+  color: #0D47A1; 
+  font-weight: bold;
+  text-align: center;
+  line-height: 1.2;
+}
+
+/* Pop-up effect when selected */
+.menu-item.selected .menu-icon i {
+  transform: translateY(-8px) scale(1.2);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Specific colors for each menu item when selected */
+.menu-item[data-category="achievements"].selected .menu-icon i {
+  color: #9c27b0;
+}
+
+.menu-item[data-category="home"].selected .menu-icon i {
+  color: #4285f4;
+}
+
+.menu-item[data-category="habit-tracker"].selected .menu-icon i {
+  color: #ff4081;
+}
+
+.menu-item[data-category="user-account"].selected .menu-icon i {
+  color: #00bcd4;
+}
+
+/* Custom image icon styling */
+.menu-icon img {
+  width: 18px;
+  height: 18px;
+  transition: all 0.3s ease;
+  object-fit: contain;
+  filter: grayscale(100%) brightness(0.7);
+  border-radius: 6px;
+}
+
+.menu-item.selected .menu-icon img {
+  transform: translateY(-8px) scale(1.2);
+  filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+  border-radius: 8px;
+}
+
+/* Fallback icon styling */
+.menu-icon .fallback-icon {
+  width: 18px;
+  height: 18px;
+  background-color: #90CAF9;
+  border-radius: 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.menu-item.selected .menu-icon .fallback-icon {
+  background-color: #ff4081;
+  transform: translateY(-8px) scale(1.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 320px) {
+  .bottom-nav {
+    padding: 5px 2px;
+  }
+  
+  .menu-icon {
+    width: 26px;
+    height: 26px;
+  }
+  
+  .menu-icon i {
+    font-size: 16px;
+  }
+  
+  .menu-icon img {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .menu-icon .fallback-icon {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .menu-label {
+    font-size: 8px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Header -->
+  <div class="header">
+    <h2>Good Morning,<br><span>John Doe! 👋</span></h2>
+    <div class="weather">
+      ☁️ 76°<br><span>Tuesday, April 23</span>
+    </div>
+  </div>
+
+  <!-- Baymax -->
+  <div class="baymax-section">
+    <img src="baymax.png" alt="Baymax" class="baymax-img" />
+  </div>
+
+  <!-- Feature Cards -->
+  <div class="grid">
+    <button class="card" onclick="navigateTo('focuslab.html')">
+      <span>🧠</span>Focus Lab
+    </button>
+    <button class="card" onclick="navigateTo('calm2.html')">
+      <span>🧘</span>Calm Space
+    </button>
+    <button class="card" onclick="navigateTo('journal.html')">
+      <span>📘</span>Journal
+    </button>
+    <button class="card" onclick="navigateTo('routine.html')">
+      <span>🗓️</span>Routine & Tasks
+    </button>
+    <button class="card" onclick="navigateTo('StudyZone.html')">
+      <span>💡</span>Study Zone 
+    </button>
+    <button class="card" onclick="navigateTo('progress.tracker.html')">
+      <span>📈</span>Progress Tracker
+    </button>
+    </button>
+  </div>
+
+  <!-- Bottom Nav -->
+  <nav class="bottom-nav">
+    <a href="achievements.html" class="menu-item" data-category="achievements">
+      <div class="menu-icon">
+        <i class="fas fa-trophy"></i>
+      </div>
+      <div class="menu-label">Achievements</div>
+    </a>
+    
+    <a href="cv.html" class="menu-item" data-category="cv">
+      <div class="menu-icon">
+        <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="fallback-icon" style="display: none;">
+          <i class="fas fa-check"></i>
+        </div>
+      </div>
+      <div class="menu-label">CV</div>
+    </a>
+    
+    <a href="profile.html" class="menu-item" data-category="user-account">
+      <div class="menu-icon">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="menu-label">Account</div>
+    </a>
+    
+    <a href="#" class="menu-item selected" data-category="home">
+      <div class="menu-icon">
+        <i class="fas fa-home"></i>
+      </div>
+      <div class="menu-label">Home</div>
+    </a>
+  </nav>
+
+</div>
+
+<script>
+  function navigateTo(page) {
+    window.location.href = page;
+  }
+
+  // Bottom nav interaction
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+      item.addEventListener('click', function() {
+        // Remove selected class from all items
+        menuItems.forEach(i => i.classList.remove('selected'));
+        
+        // Add selected class to clicked item
+        this.classList.add('selected');
+        
+        // Navigation will proceed normally
+        // The selection effect will be visible briefly before page change
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
