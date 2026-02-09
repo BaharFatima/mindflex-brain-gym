@@ -750,36 +750,41 @@
       </div>
     </div>
 
-    <!-- ===== Bottom Nav Bar (Account selected) ===== -->
+     <!-- ========== STANDARD NAV BAR - CONSISTENT ACROSS ALL PAGES ========== -->
     <nav class="bottom-nav">
-      <a href="achievements.html" class="nav-item" data-category="achievements">
-        <div class="nav-icon"><i class="fas fa-trophy"></i></div>
-        <div class="nav-label">Achievements</div>
-      </a>
+        <a href="cv.html" class="nav-item" data-category="cv">
+            <div class="nav-icon">
+                <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+            </div>
+            <div class="nav-label">CV</div>
+        </a>
 
-      <a href="cv.html" class="nav-item" data-category="cv">
-        <div class="nav-icon">
-          <img
-            src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c"
-            alt="cv"
-            onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
-          >
-          <div class="fallback-icon" style="display:none;"><i class="fas fa-check"></i></div>
-        </div>
-        <div class="nav-label">CV</div>
-      </a>
+        <a href="#" class="nav-item selected" data-category="achievements">
+            <div class="nav-icon"><i class="fas fa-trophy" style="color: #9c27b0;"></i></div>
+            <div class="nav-label">Achievements</div>
+        </a>
 
-      <a href="#" class="nav-item selected" data-category="user-account">
-        <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
-        <div class="nav-label">Account</div>
-      </a>
+        <a href="main.html" class="nav-item" data-category="home">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div class="nav-label">Home</div>
+        </a>
 
-      <a href="main.html" class="nav-item" data-category="home">
-        <div class="nav-icon"><i class="fas fa-home"></i></div>
-        <div class="nav-label">Home</div>
-      </a>
+        <a href="habittracker.html" class="nav-item" data-category="habit-tracker">
+            <div class="nav-icon">
+                <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;"><i class="fas fa-check"></i></div>
+            </div>
+            <div class="nav-label">Habit Tracker</div>
+        </a>
+
+        <a href="profile.html" class="nav-item" data-category="user-account">
+            <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+            <div class="nav-label">Account</div>
+        </a>
     </nav>
-
   </div>
 
   <script>
