@@ -150,6 +150,7 @@ body{
 
 .reward-item{
     text-align:center;
+    width: 80px;
 }
 
 .reward-item img{
@@ -165,10 +166,11 @@ body{
     font-size:13px;
 }
 
-/* ===== BOTTOM NAV BAR (Matching Home Page exactly) ===== */
+/* ========== STANDARD NAV BAR STYLES MATCHING ALL PAGES ========== */
 .bottom-nav {
   position: absolute;
   bottom: 0;
+  left: 0;
   width: 100%;
   height: 60px;
   background: #FFFFFF;
@@ -179,21 +181,10 @@ body{
   align-items: center;
   box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
   padding: 8px 5px;
-  animation: slideUp 0.5s ease-out;
+  z-index: 50;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.menu-item {
+.nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,12 +192,11 @@ body{
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 2px;
-  position: relative;
   flex: 1;
   text-decoration: none;
 }
 
-.menu-icon {
+.nav-icon {
   width: 30px;
   height: 30px;
   display: flex;
@@ -216,34 +206,31 @@ body{
   color: #90CAF9;
 }
 
-.menu-icon i {
-  font-size: 18px;
-  transition: all 0.3s ease;
+.nav-icon i { 
+  font-size: 18px; 
+  transition: all 0.3s ease; 
 }
 
-.menu-label {
+.nav-label {
   font-size: 9px;
-  /* CHANGED TO DARK BLUE AND BOLD */
-  color: #0D47A1; 
-  font-weight: bold;
+  color: #5f6368;
   text-align: center;
   line-height: 1.2;
+  font-weight: 600;
 }
 
-/* Pop-up effect when selected */
-.menu-item.selected .menu-icon i {
+.nav-item.selected .nav-icon i {
   transform: translateY(-8px) scale(1.2);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Specific colors for each menu item when selected */
-.menu-item[data-category="achievements"].selected .menu-icon i { color: #9c27b0; }
-.menu-item[data-category="home"].selected .menu-icon i { color: #4285f4; }
-.menu-item[data-category="habit-tracker"].selected .menu-icon i { color: #ff4081; }
-.menu-item[data-category="user-account"].selected .menu-icon i { color: #00bcd4; }
+.nav-item[data-category="cv"].selected .nav-icon i { color: #0D47A1; }
+.nav-item[data-category="achievements"].selected .menu-icon i { color: #9c27b0; }
+.nav-item[data-category="home"].selected .nav-icon i { color: #1565C0; }
+.nav-item[data-category="habit-tracker"].selected .nav-icon i { color: #ff4081; }
+.nav-item[data-category="user-account"].selected .nav-icon i { color: #00838F; }
 
-/* Custom image icon styling */
-.menu-icon img {
+.nav-icon img {
   width: 18px;
   height: 18px;
   transition: all 0.3s ease;
@@ -252,14 +239,13 @@ body{
   border-radius: 6px;
 }
 
-.menu-item.selected .menu-icon img {
+.nav-item.selected .nav-icon img {
   transform: translateY(-8px) scale(1.2);
   filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
   border-radius: 8px;
 }
 
-/* Fallback icon styling */
-.menu-icon .fallback-icon {
+.nav-icon .fallback-icon {
   width: 18px;
   height: 18px;
   background-color: #90CAF9;
@@ -272,21 +258,18 @@ body{
   transition: all 0.3s ease;
 }
 
-.menu-item.selected .menu-icon .fallback-icon {
-  background-color: #ff4081;
+.nav-item.selected .nav-icon .fallback-icon {
   transform: translateY(-8px) scale(1.2);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 320px) {
-  .bottom-nav { padding: 5px 2px; }
-  .menu-icon { width: 26px; height: 26px; }
-  .menu-icon i { font-size: 16px; }
-  .menu-icon img { width: 16px; height: 16px; }
-  .menu-icon .fallback-icon { width: 16px; height: 16px; }
-  .menu-label { font-size: 8px; }
+.nav-item[data-category="habit-tracker"].selected .nav-icon .fallback-icon {
+  background-color: #ff4081;
+}
+
+.nav-item[data-category="cv"].selected .nav-icon .fallback-icon {
+  background-color: #0D47A1;
 }
 </style>
 </head>
@@ -303,7 +286,7 @@ body{
     <div class="progress-wrap">
         <div class="arc"></div>
         <div class="badge">
-            <img src="https://img.icons8.com/color/96/diamond.png">
+            <img src="https://img.icons8.com/color/96/diamond.png" alt="Diamond Badge">
         </div>
     </div>
 
@@ -316,103 +299,82 @@ body{
 
     <div class="rewards">
         <div class="reward-item">
-            <img src="https://img.icons8.com/color/96/user.png">
+            <img src="https://img.icons8.com/color/96/user.png" alt="Badge">
             <div class="reward-label">New member</div>
         </div>
         <div class="reward-item">
-            <img src="https://img.icons8.com/color/96/compass.png">
+            <img src="https://img.icons8.com/color/96/compass.png" alt="Badge">
             <div class="reward-label">Explore</div>
         </div>
         <div class="reward-item">
-            <img src="https://img.icons8.com/color/96/add-user-male.png">
+            <img src="https://img.icons8.com/color/96/add-user-male.png" alt="Badge">
             <div class="reward-label">Invite</div>
         </div>
         <div class="reward-item">
-            <img src="https://img.icons8.com/color/96/medal.png">
+            <img src="https://img.icons8.com/color/96/medal.png" alt="Badge">
             <div class="reward-label">Milestone</div>
         </div>
         <div class="reward-item">
-            <img src="https://img.icons8.com/color/96/like.png">
+            <img src="https://img.icons8.com/color/96/like.png" alt="Badge">
             <div class="reward-label">Supporter</div>
         </div>
     </div>
 
-  <  <!-- Navigation Bar (Fixed at bottom via Flexbox) -->
-  <div class="menu-container">
-    <div class="menu-item" data-category="cv" onclick="window.location.href='cv.html'">
-        <div class="menu-icon">
-            <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="fallback-icon" style="display: none;">
-                <i class="fas fa-file-alt"></i>
+    <!-- ========== STANDARD NAV BAR - CONSISTENT ACROSS ALL PAGES ========== -->
+    <nav class="bottom-nav">
+        <a href="cv.html" class="nav-item" data-category="cv">
+            <div class="nav-icon">
+                <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;">
+                    <i class="fas fa-file-alt"></i>
+                </div>
             </div>
-        </div>
-        <div class="menu-label">CV</div>
-    </div>
-    
-    <div class="menu-item" data-category="achievements" onclick="window.location.href='achievements.html'">
-        <div class="menu-icon">
-            <i class="fas fa-trophy"></i>
-        </div>
-        <div class="menu-label">Achieve</div>
-    </div>
-    
-    <div class="menu-item" data-category="home" onclick="window.location.href='main.html'">
-        <div class="menu-icon">
-            <i class="fas fa-home"></i>
-        </div>
-        <div class="menu-label">Home</div>
-    </div>
-    
-    <div class="menu-item" data-category="habit-tracker" onclick="window.location.href='habittracker.html'">
-        <div class="menu-icon">
-            <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="fallback-icon" style="display: none;">
-                <i class="fas fa-check"></i>
+            <div class="nav-label">CV</div>
+        </a>
+
+        <a href="#" class="nav-item selected" data-category="achievements">
+            <div class="nav-icon"><i class="fas fa-trophy" style="color: #9c27b0;"></i></div>
+            <div class="nav-label">Achievements</div>
+        </a>
+
+        <a href="main.html" class="nav-item" data-category="home">
+            <div class="nav-icon"><i class="fas fa-home"></i></div>
+            <div class="nav-label">Home</div>
+        </a>
+
+        <a href="habittracker.html" class="nav-item" data-category="habit-tracker">
+            <div class="nav-icon">
+                <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <div class="fallback-icon" style="display: none;"><i class="fas fa-check"></i></div>
             </div>
-        </div>
-        <div class="menu-label">Habit Tracker</div>
-    </div>
-    
-    <div class="menu-item" data-category="user-account" onclick="window.location.href='account.html'">
-        <div class="menu-icon">
-            <i class="fas fa-user-circle"></i>
-        </div>
-        <div class="menu-label">Account</div>
-    </div>
-  </div>
+            <div class="nav-label">Habit Tracker</div>
+        </a>
+
+        <a href="profile.html" class="nav-item" data-category="user-account">
+            <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+            <div class="nav-label">Account</div>
+        </a>
+    </nav>
+
 </div>
 
 <script>
-// Top Back Button
-function goBack() {
-    window.location.href="main.html"; 
-}
-
 // Bottom Nav Interactions with Animation Delay
 document.addEventListener('DOMContentLoaded', function() {
-    const menuItems = document.querySelectorAll('.menu-item');
+    const navItems = document.querySelectorAll('.nav-item');
     
-    menuItems.forEach(item => {
+    navItems.forEach(item => {
         item.addEventListener('click', function(e) {
             const targetUrl = this.getAttribute('href');
             
-            // If it's a link to another page (not just "#" for current page)
             if (targetUrl && targetUrl !== '#') {
-                // 1. Prevent instant navigation
                 e.preventDefault();
-                
-                // 2. Play the pop-up animation
-                menuItems.forEach(i => i.classList.remove('selected'));
+                navItems.forEach(i => i.classList.remove('selected'));
                 this.classList.add('selected');
                 
-                // 3. Wait 300ms for the CSS animation to finish, THEN navigate
                 setTimeout(() => {
                     window.location.href = targetUrl;
                 }, 300);
-            } else {
-                // If it's the current page ("#"), just animate it without navigating
-                menuItems.forEach(i => i.classList.remove('selected'));
-                this.classList.add('selected');
             }
         });
     });
@@ -420,5 +382,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>
-
 </html>
