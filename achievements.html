@@ -337,39 +337,55 @@ body{
         </div>
     </div>
 
-    <!-- ===== BOTTOM NAV BAR ===== -->
-    <nav class="bottom-nav">
-        <!-- Achievements is selected here by default -->
-        <a href="#" class="menu-item selected" data-category="achievements">
-            <div class="menu-icon"><i class="fas fa-trophy"></i></div>
-            <div class="menu-label">Achievements</div>
-        </a>
-        
-        <a href="cv.html" class="menu-item" data-category="habit-tracker">
-            <div class="menu-icon">
-                <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="fallback-icon" style="display: none;"><i class="fas fa-check"></i></div>
+  <  <!-- Navigation Bar (Fixed at bottom via Flexbox) -->
+  <div class="menu-container">
+    <div class="menu-item" data-category="cv" onclick="window.location.href='cv.html'">
+        <div class="menu-icon">
+            <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="fallback-icon" style="display: none;">
+                <i class="fas fa-file-alt"></i>
             </div>
-            <div class="menu-label">CV</div>
-        </a>
-        
-        <a href="profile.html" class="menu-item" data-category="user-account">
-            <div class="menu-icon"><i class="fas fa-user-circle"></i></div>
-            <div class="menu-label">Account</div>
-        </a>
-        
-        <a href="main.html" class="menu-item" data-category="home">
-            <div class="menu-icon"><i class="fas fa-home"></i></div>
-            <div class="menu-label">Home</div>
-        </a>
-    </nav>
-
+        </div>
+        <div class="menu-label">CV</div>
+    </div>
+    
+    <div class="menu-item" data-category="achievements" onclick="window.location.href='achievements.html'">
+        <div class="menu-icon">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <div class="menu-label">Achieve</div>
+    </div>
+    
+    <div class="menu-item" data-category="home" onclick="window.location.href='main.html'">
+        <div class="menu-icon">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="menu-label">Home</div>
+    </div>
+    
+    <div class="menu-item" data-category="habit-tracker" onclick="window.location.href='habittracker.html'">
+        <div class="menu-icon">
+            <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="fallback-icon" style="display: none;">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        <div class="menu-label">Habit Tracker</div>
+    </div>
+    
+    <div class="menu-item" data-category="user-account" onclick="window.location.href='account.html'">
+        <div class="menu-icon">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="menu-label">Account</div>
+    </div>
+  </div>
 </div>
 
 <script>
 // Top Back Button
 function goBack() {
-    window.location.href="index.html"; 
+    window.location.href="main.html"; 
 }
 
 // Bottom Nav Interactions with Animation Delay
@@ -404,4 +420,5 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </body>
+
 </html>
