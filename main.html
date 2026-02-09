@@ -82,7 +82,7 @@ body {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 14px;
-  padding: 0 20px 10px;
+  padding: 0 20px 20px;
 }
 .card {
   background: #ffffff;
@@ -109,8 +109,12 @@ body {
   margin-bottom: 6px;
 }
 
-/* Bottom Nav - New Styles */
+/* ========== STANDARD NAV BAR STYLES MATCHING ALL PAGES ========== */
 .bottom-nav {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
   height: 60px;
   background: #FFFFFF;
   border-top: 1px solid #E3F2FD;
@@ -120,22 +124,10 @@ body {
   align-items: center;
   box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
   padding: 8px 5px;
-  position: relative;
-  animation: slideUp 0.5s ease-out;
+  z-index: 50;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.menu-item {
+.nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -143,12 +135,11 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   padding: 2px;
-  position: relative;
   flex: 1;
   text-decoration: none;
 }
 
-.menu-icon {
+.nav-icon {
   width: 30px;
   height: 30px;
   display: flex;
@@ -158,45 +149,31 @@ body {
   color: #90CAF9;
 }
 
-.menu-icon i {
-  font-size: 18px;
-  transition: all 0.3s ease;
+.nav-icon i { 
+  font-size: 18px; 
+  transition: all 0.3s ease; 
 }
 
-.menu-label {
+.nav-label {
   font-size: 9px;
-  /* CHANGED TO DARK BLUE AND BOLD */
-  color: #0D47A1; 
-  font-weight: bold;
+  color: #5f6368;
   text-align: center;
   line-height: 1.2;
+  font-weight: 600;
 }
 
-/* Pop-up effect when selected */
-.menu-item.selected .menu-icon i {
+.nav-item.selected .nav-icon i {
   transform: translateY(-8px) scale(1.2);
   text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Specific colors for each menu item when selected */
-.menu-item[data-category="achievements"].selected .menu-icon i {
-  color: #9c27b0;
-}
+.nav-item[data-category="cv"].selected .nav-icon i { color: #0D47A1; }
+.nav-item[data-category="achievements"].selected .nav-icon i { color: #9c27b0; }
+.nav-item[data-category="home"].selected .nav-icon i { color: #1565C0; }
+.nav-item[data-category="habit-tracker"].selected .nav-icon i { color: #ff4081; }
+.nav-item[data-category="user-account"].selected .nav-icon i { color: #00838F; }
 
-.menu-item[data-category="home"].selected .menu-icon i {
-  color: #4285f4;
-}
-
-.menu-item[data-category="habit-tracker"].selected .menu-icon i {
-  color: #ff4081;
-}
-
-.menu-item[data-category="user-account"].selected .menu-icon i {
-  color: #00bcd4;
-}
-
-/* Custom image icon styling */
-.menu-icon img {
+.nav-icon img {
   width: 18px;
   height: 18px;
   transition: all 0.3s ease;
@@ -205,14 +182,13 @@ body {
   border-radius: 6px;
 }
 
-.menu-item.selected .menu-icon img {
+.nav-item.selected .nav-icon img {
   transform: translateY(-8px) scale(1.2);
   filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
   border-radius: 8px;
 }
 
-/* Fallback icon styling */
-.menu-icon .fallback-icon {
+.nav-icon .fallback-icon {
   width: 18px;
   height: 18px;
   background-color: #90CAF9;
@@ -225,41 +201,18 @@ body {
   transition: all 0.3s ease;
 }
 
-.menu-item.selected .menu-icon .fallback-icon {
-  background-color: #ff4081;
+.nav-item.selected .nav-icon .fallback-icon {
   transform: translateY(-8px) scale(1.2);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 320px) {
-  .bottom-nav {
-    padding: 5px 2px;
-  }
-  
-  .menu-icon {
-    width: 26px;
-    height: 26px;
-  }
-  
-  .menu-icon i {
-    font-size: 16px;
-  }
-  
-  .menu-icon img {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .menu-icon .fallback-icon {
-    width: 16px;
-    height: 16px;
-  }
-  
-  .menu-label {
-    font-size: 8px;
-  }
+.nav-item[data-category="habit-tracker"].selected .nav-icon .fallback-icon {
+  background-color: #ff4081;
+}
+
+.nav-item[data-category="cv"].selected .nav-icon .fallback-icon {
+  background-color: #0D47A1;
 }
 </style>
 </head>
@@ -299,40 +252,41 @@ body {
     <button class="card" onclick="navigateTo('progress.tracker.html')">
       <span>📈</span>Progress Tracker
     </button>
-    </button>
   </div>
 
-  <!-- Bottom Nav -->
+  <!-- ========== NEW STANDARD NAV BAR - CONSISTENT ACROSS ALL PAGES ========== -->
   <nav class="bottom-nav">
-    <a href="achievements.html" class="menu-item" data-category="achievements">
-      <div class="menu-icon">
-        <i class="fas fa-trophy"></i>
-      </div>
-      <div class="menu-label">Achievements</div>
-    </a>
-    
-    <a href="cv.html" class="menu-item" data-category="cv">
-      <div class="menu-icon">
-        <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+    <a href="cv.html" class="nav-item" data-category="cv">
+      <div class="nav-icon">
+        <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <div class="fallback-icon" style="display: none;">
-          <i class="fas fa-check"></i>
+          <i class="fas fa-file-alt"></i>
         </div>
       </div>
-      <div class="menu-label">CV</div>
+      <div class="nav-label">CV</div>
     </a>
-    
-    <a href="profile.html" class="menu-item" data-category="user-account">
-      <div class="menu-icon">
-        <i class="fas fa-user-circle"></i>
-      </div>
-      <div class="menu-label">Account</div>
+
+    <a href="achievements.html" class="nav-item" data-category="achievements">
+      <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+      <div class="nav-label">Achievements</div>
     </a>
-    
-    <a href="#" class="menu-item selected" data-category="home">
-      <div class="menu-icon">
-        <i class="fas fa-home"></i>
+
+    <a href="#" class="nav-item selected" data-category="home">
+      <div class="nav-icon"><i class="fas fa-home"></i></div>
+      <div class="nav-label">Home</div>
+    </a>
+
+    <a href="habittracker.html" class="nav-item" data-category="habit-tracker">
+      <div class="nav-icon">
+        <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <div class="fallback-icon" style="display: none;"><i class="fas fa-check"></i></div>
       </div>
-      <div class="menu-label">Home</div>
+      <div class="nav-label">Habit Tracker</div>
+    </a>
+
+    <a href="profile.html" class="nav-item" data-category="user-account">
+      <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
+      <div class="nav-label">Account</div>
     </a>
   </nav>
 
@@ -345,25 +299,22 @@ body {
 
   // Bottom nav interaction
   document.addEventListener('DOMContentLoaded', function() {
-    const menuItems = document.querySelectorAll('.menu-item');
+    const navItems = document.querySelectorAll('.nav-item');
     
-    menuItems.forEach(item => {
-      item.addEventListener('click', function() {
-        // Remove selected class from all items
-        menuItems.forEach(i => i.classList.remove('selected'));
-        
-        // Add selected class to clicked item
+    navItems.forEach(item => {
+      item.addEventListener('click', function(e) {
+        const targetUrl = this.getAttribute('href');
+        navItems.forEach(i => i.classList.remove('selected'));
         this.classList.add('selected');
-        
-        // Navigation will proceed normally
-        // The selection effect will be visible briefly before page change
+
+        if (targetUrl && targetUrl !== '#') {
+          e.preventDefault();
+          setTimeout(() => window.location.href = targetUrl, 300);
+        }
       });
     });
   });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="script.js"></script>
 
 </body>
 </html>
-
