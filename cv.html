@@ -1,362 +1,468 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MindFlex – Text Reader</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>MindFlex – Camera Text Reader</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+<style>
+/* --- Global & Layout --- */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background: linear-gradient(180deg, #B3E5FC 0%, #E1F5FE 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+body {
+  margin: 0;
+  font-family: Poppins, sans-serif;
+  background: linear-gradient(180deg, #B3E5FC, #E1F5FE);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-    .container {
-      width: 320px;
-      height: 640px;
-      border-radius: 30px;
-      background: linear-gradient(180deg, #BBDEFB 0%, #E3F2FD 100%);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative; /* added for back button positioning */
-    }
+.container {
+  width: 320px;
+  height: 640px;
+  background: #E3F2FD;
+  border-radius: 30px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
 
-    /* ===== Back Button (added) ===== */
-    .back-btn {
-      position: absolute;
-      top: 15px;
-      left: 15px;
-      font-size: 24px;
-      color: #063354;
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #ffffffcc;
-      border-radius: 50%;
-      z-index: 999;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-      border: none;
-    }
+/* --- Header with Back Button --- */
+header {
+  display: flex;
+  align-items: center;
+  padding: 14px;
+  background: #E3F2FD;
+  color: #0D47A1;
+  z-index: 10;
+  border-bottom: 1px solid rgba(13, 71, 161, 0.1);
+}
 
-    /* Header */
-    .header {
-      padding: 22px 20px 10px;
-      color: #0D47A1;
-      text-align: center;
-    }
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  color: #0D47A1;
+  cursor: pointer;
+  padding: 5px;
+  margin-right: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    .header h2 {
-      font-size: 18px;
-      font-weight: 600;
-    }
+.header-text {
+  flex: 1;
+  text-align: center;
+  padding-right: 25px; /* Balance the back button spacing */
+}
 
-    .header p {
-      font-size: 12px;
-      opacity: 0.8;
-      margin-top: 4px;
-    }
+.header-text h3 {
+  font-size: 16px;
+  margin: 0;
+  font-weight: 700;
+}
 
-    /* Camera section */
-    .camera-box {
-      padding: 0 16px;
-    }
+.header-text p {
+  font-size: 11px;
+  margin: 0;
+  opacity: 0.8;
+}
 
-    video {
-      width: 100%;
-      border-radius: 20px;
-      border: 2px solid #E3F2FD;
-      background: #000;
-    }
+/* --- Main Content Area --- */
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px 80px 10px; /* Bottom padding ensures content isn't hidden by nav */
+  display: flex;
+  flex-direction: column;
+}
 
-    .hint {
-      text-align: center;
-      font-size: 11px;
-      color: #0D47A1;
-      opacity: 0.7;
-      margin-top: 6px;
-    }
+video {
+  width: 100%;
+  border-radius: 20px;
+  background: black;
+  margin-bottom: 10px;
+  border: 2px solid #BBDEFB;
+}
 
-    /* Controls */
-    .controls {
-      display: flex;
-      gap: 10px;
-      padding: 14px 16px 6px;
-    }
+/* --- Controls --- */
+.controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
 
-    .controls button {
-      flex: 1;
-      padding: 10px;
-      border-radius: 14px;
-      border: none;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+.controls button {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  border-radius: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: Poppins, sans-serif;
+  transition: transform 0.1s;
+}
 
-    .scan-btn {
-      background: linear-gradient(135deg, #64B5F6, #1E88E5);
-      color: white;
-    }
+.controls button:active { transform: scale(0.98); }
 
-    .read-btn {
-      background: #E3F2FD;
-      color: #1565C0;
-    }
+.scan { background: #1565C0; color: white; } /* Darker blue for action */
+.read { background: #BBDEFB; color: #0D47A1; }
+.flip { background: #E3F2FD; color: #0D47A1; border: 1px solid #BBDEFB; }
 
-    /* Speed */
-    .speed-control {
-      margin: 8px 16px;
-      background: #ffffff;
-      border-radius: 14px;
-      padding: 8px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 13px;
-      color: #1565C0;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.06);
-    }
+/* --- Speed Control --- */
+.speed {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #BBDEFB;
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
 
-    .speed-control button {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: none;
-      background: #E3F2FD;
-      font-size: 18px;
-      cursor: pointer;
-    }
+.speed button {
+  background: #1565C0;
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-weight: bold;
+  cursor: pointer;
+}
 
-    /* Output */
-    .output {
-      padding: 10px 16px;
-    }
+#speedDisplay {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0D47A1;
+}
 
-    textarea {
-      width: 100%;
-      height: 110px;
-      border-radius: 16px;
-      border: 1px solid #E3F2FD;
-      padding: 10px;
-      font-size: 13px;
-      resize: none;
-      background: #ffffff;
-    }
+textarea {
+  width: 100%;
+  border-radius: 14px;
+  padding: 10px;
+  height: 100px;
+  resize: none;
+  border: 1px solid #BBDEFB;
+  font-family: Poppins, sans-serif;
+  font-size: 12px;
+  color: #0D47A1;
+}
 
-    /* ===== Bottom Nav (added, matching your requirements) ===== */
-    .bottom-nav {
-      height: 60px;
-      background: #FFFFFF;
-      border-top: 1px solid #E3F2FD;
-      border-radius: 20px 20px 0 0;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
-      padding: 8px 5px;
-    }
+/* --- Navigation Bar Styles --- */
+.menu-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-radius: 20px 20px 0 0;
+    padding: 10px 5px; 
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-around;
+    z-index: 100;
+    animation: slideUp 0.5s ease-out;
+}
 
-    .menu-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 3px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      padding: 2px;
-      position: relative;
-      flex: 1;
-      text-decoration: none;
-    }
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-    .menu-icon {
-      width: 30px;
-      height: 30px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      transition: all 0.3s ease;
-      color: #90CAF9;
-    }
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 5px;
+    flex: 1;
+}
 
-    .menu-icon i {
-      font-size: 18px;
-      transition: all 0.3s ease;
-    }
+.menu-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    color: #5f6368;
+}
 
-    /* dark blue + bold text */
-    .menu-label {
-      font-size: 9px;
-      color: #0D47A1;
-      font-weight: bold;
-      text-align: center;
-      line-height: 1.2;
-    }
+.menu-icon i {
+    font-size: 20px;
+    transition: all 0.3s ease;
+}
 
-    /* Pop-up effect when selected */
-    .menu-item.selected .menu-icon i {
-      transform: translateY(-8px) scale(1.2);
-      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
+.menu-label {
+    font-size: 9px;
+    color: #5f6368;
+    text-align: center;
+    line-height: 1.2;
+    font-weight: bold; /* BOLD REQUESTED */
+}
 
-    .menu-item[data-category="achievements"].selected .menu-icon i { color: #9c27b0; }
-    .menu-item[data-category="home"].selected .menu-icon i { color: #4285f4; }
-    .menu-item[data-category="cv"].selected .menu-icon i { color: #ff4081; }
-    .menu-item[data-category="user-account"].selected .menu-icon i { color: #00bcd4; }
+/* --- Active State Logic --- */
+.menu-item.selected .menu-icon i {
+    transform: translateY(-6px) scale(1.1);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
 
-    .menu-icon img {
-      width: 18px;
-      height: 18px;
-      transition: all 0.3s ease;
-      object-fit: contain;
-      filter: grayscale(100%) brightness(0.7);
-      border-radius: 6px;
-    }
+/* UPDATED: Dark Blue Colors (#0D47A1) */
+.menu-item[data-category="cv"].selected .menu-icon i { color: #0D47A1; }
+.menu-item[data-category="home"].selected .menu-icon i { color: #0D47A1; }
+.menu-item[data-category="user-account"].selected .menu-icon i { color: #0D47A1; }
 
-    .menu-item.selected .menu-icon img {
-      transform: translateY(-8px) scale(1.2);
-      filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
-      border-radius: 8px;
-    }
+/* Keep Achievement Purple and Habits Pink */
+.menu-item[data-category="achievements"].selected .menu-icon i { color: #9c27b0; }
+.menu-item[data-category="habit-tracker"].selected .menu-icon i { color: #ff4081; }
 
-    .menu-icon .fallback-icon {
-      width: 18px;
-      height: 18px;
-      background-color: #90CAF9;
-      border-radius: 6px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      color: white;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
+/* Image Icons */
+.menu-icon img {
+    width: 20px;
+    height: 20px;
+    transition: all 0.3s ease;
+    object-fit: contain;
+    filter: grayscale(100%) brightness(0.7);
+    border-radius: 6px;
+}
 
-    .menu-item.selected .menu-icon .fallback-icon {
-      background-color: #ff4081;
-      transform: translateY(-8px) scale(1.2);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-      border-radius: 8px;
-    }
-  </style>
+.menu-item.selected .menu-icon img {
+    transform: translateY(-6px) scale(1.1);
+    border-radius: 8px;
+}
+
+/* Filter for Dark Blue CV Icon */
+.menu-item[data-category="cv"].selected .menu-icon img {
+    /* Filters to make it look active with dark blue shadow/tone */
+    filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(13, 71, 161, 0.3));
+}
+
+/* Filter for Habits Icon */
+.menu-item[data-category="habit-tracker"].selected .menu-icon img {
+    filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(255, 64, 129, 0.3));
+}
+
+/* Fallback Icon */
+.menu-icon .fallback-icon {
+    width: 20px;
+    height: 20px;
+    background-color: #5f6368;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.menu-item.selected .menu-icon .fallback-icon {
+    transform: translateY(-6px) scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.menu-item[data-category="cv"].selected .menu-icon .fallback-icon { background-color: #0D47A1; }
+.menu-item[data-category="habit-tracker"].selected .menu-icon .fallback-icon { background-color: #ff4081; }
+
+</style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <!-- Back button (added) -->
-  <button class="back-btn" onclick="window.location.href='main.html'">←</button>
-
-  <!-- Header -->
-  <div class="header">
-    <h2>📷 Focus Reader</h2>
-    <p>Scan text and listen calmly</p>
+<!-- Header with Back Button -->
+<header>
+  <button class="back-btn" onclick="goBack()">
+    <i class="fas fa-chevron-left"></i>
+  </button>
+  <div class="header-text">
+    <h3>📷 MindFlex Reader</h3>
+    <p>Camera → OCR → Speech</p>
   </div>
+</header>
 
-  <!-- Camera -->
-  <div class="camera-box">
-    <div class="camera-box">
-      <video id="video" autoplay playsinline></video>
-    </div>
-  </div>
+<!-- Scrollable Content Wrapper -->
+<div class="app-content">
+  <video id="video" autoplay playsinline></video>
 
-  <!-- Controls -->
   <div class="controls">
-    <button class="scan-btn" onclick="scanText()">Scan</button>
-    <button class="read-btn" onclick="speakText()">Read</button>
+    <button class="flip" onclick="flipCamera()">🔄 Flip</button>
+    <button class="scan" onclick="scanText()">Scan</button>
+    <button class="read" onclick="speakText()">Read</button>
   </div>
 
-  <!-- Speed -->
-  <div class="speed-control">
+  <div class="speed">
     <button onclick="decreaseSpeed()">−</button>
     <span id="speedDisplay">Speed: 1.0</span>
     <button onclick="increaseSpeed()">+</button>
   </div>
 
-  <!-- Output -->
-  <div class="output">
-    <textarea id="outputText" placeholder="Recognized text will appear here"></textarea>
-  </div>
+  <textarea id="outputText" placeholder="Recognized text will appear here"></textarea>
+</div>
 
-  <!-- Bottom Nav (added) -->
-  <nav class="bottom-nav">
-    <a href="achievements.html" class="menu-item" data-category="achievements">
-      <div class="menu-icon"><i class="fas fa-trophy"></i></div>
-      <div class="menu-label">Achievements</div>
-    </a>
-
-    <!-- CV selected on this page -->
-    <a href="#" class="menu-item selected" data-category="cv">
-      <div class="menu-icon">
-        <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c"
-             alt="CV"
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        <div class="fallback-icon" style="display:none;"><i class="fas fa-check"></i></div>
-      </div>
-      <div class="menu-label">CV</div>
-    </a>
-
-    <a href="profile.html" class="menu-item" data-category="user-account">
-      <div class="menu-icon"><i class="fas fa-user-circle"></i></div>
-      <div class="menu-label">Account</div>
-    </a>
-
-    <a href="main.html" class="menu-item" data-category="home">
-      <div class="menu-icon"><i class="fas fa-home"></i></div>
-      <div class="menu-label">Home</div>
-    </a>
-  </nav>
+<!-- Navigation Bar -->
+<div class="menu-container">
+    <!-- CV Section (Dark Blue) -->
+    <div class="menu-item" data-category="cv" onclick="navigateTo('cv.html')">
+        <div class="menu-icon">
+            <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="fallback-icon" style="display: none;">
+                <i class="fas fa-file-alt"></i>
+            </div>
+        </div>
+        <div class="menu-label">CV</div>
+    </div>
+    
+    <!-- Achievements Section -->
+    <div class="menu-item" data-category="achievements" onclick="navigateTo('achievements.html')">
+        <div class="menu-icon">
+            <i class="fas fa-trophy"></i>
+        </div>
+        <div class="menu-label">Achieve</div>
+    </div>
+    
+    <!-- Home Section (Dark Blue) -->
+    <div class="menu-item" data-category="home" onclick="navigateTo('index.html')">
+        <div class="menu-icon">
+            <i class="fas fa-home"></i>
+        </div>
+        <div class="menu-label">Home</div>
+    </div>
+    
+    <!-- Habits Section -->
+    <div class="menu-item" data-category="habit-tracker" onclick="navigateTo('habits.html')">
+        <div class="menu-icon">
+            <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="fallback-icon" style="display: none;">
+                <i class="fas fa-check"></i>
+            </div>
+        </div>
+        <div class="menu-label">Habits</div>
+    </div>
+    
+    <!-- Account Section (Dark Blue) -->
+    <div class="menu-item" data-category="user-account" onclick="navigateTo('account.html')">
+        <div class="menu-icon">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="menu-label">Account</div>
+    </div>
+</div>
 
 </div>
 
-<!-- OCR + Logic (unchanged) -->
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="ocr-camera.js"></script>
 
-<!-- Nav event handling (added) -->
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const menuItems = document.querySelectorAll('.bottom-nav .menu-item');
+/* --- Camera & OCR Logic --- */
+let extractedText = "";
+let speechRate = 1.0;
+let facingMode = "environment";
+let stream = null;
 
-    menuItems.forEach(item => {
-      item.addEventListener('click', function(e) {
-        const targetUrl = this.getAttribute('href');
+const video = document.getElementById("video");
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
 
-        // highlight
-        menuItems.forEach(i => i.classList.remove('selected'));
-        this.classList.add('selected');
+async function startCamera() {
+  if (stream) stream.getTracks().forEach(t => t.stop());
 
-        // delay navigation so pop-up is visible
-        if (targetUrl && targetUrl !== '#') {
-          e.preventDefault();
-          setTimeout(() => {
-            window.location.href = targetUrl;
-          }, 300);
-        }
-      });
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: facingMode } },
+      audio: false
     });
-  });
-</script>
+    video.srcObject = stream;
+    console.log("Camera started:", facingMode);
+  } catch (e) {
+    alert("Camera error: " + e.message);
+  }
+}
 
+function flipCamera() {
+  facingMode = facingMode === "environment" ? "user" : "environment";
+  startCamera();
+}
+
+// Start camera on load
+startCamera();
+
+function scanText() {
+  if (!video.videoWidth) {
+    alert("Camera not ready");
+    return;
+  }
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0);
+
+  document.getElementById("outputText").value = "Scanning...";
+
+  Tesseract.recognize(canvas, "eng")
+    .then(res => {
+      extractedText = res.data.text.trim();
+      document.getElementById("outputText").value = extractedText || "No text detected";
+    })
+    .catch(() => alert("OCR failed"));
+}
+
+function speakText() {
+  if (!extractedText) {
+    alert("No text to read");
+    return;
+  }
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(extractedText);
+  u.rate = speechRate;
+  speechSynthesis.speak(u);
+}
+
+function increaseSpeed() {
+  speechRate = Math.min(1.5, +(speechRate + 0.1).toFixed(1));
+  document.getElementById("speedDisplay").innerText = "Speed: " + speechRate;
+}
+
+function decreaseSpeed() {
+  speechRate = Math.max(0.5, +(speechRate - 0.1).toFixed(1));
+  document.getElementById("speedDisplay").innerText = "Speed: " + speechRate;
+}
+
+/* --- Navigation & Back Button Logic --- */
+
+function goBack() {
+    window.history.back();
+}
+
+function navigateTo(url) {
+    // console.log("Navigating to: " + url);
+    // window.location.href = url; 
+}
+
+// Navigation Bar Selection Animation
+document.addEventListener('DOMContentLoaded', function() {
+    const menuItems = document.querySelectorAll('.menu-item');
+    
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            menuItems.forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+});
+</script>
 </body>
 </html>
