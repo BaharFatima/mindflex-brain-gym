@@ -313,10 +313,9 @@ textarea {
   <textarea id="outputText" placeholder="Recognized text will appear here"></textarea>
 </div>
 
-<!-- Navigation Bar -->
-<div class="menu-container">
-    <!-- CV Section (Dark Blue) -->
-    <div class="menu-item" data-category="cv" onclick="navigateTo('cv.html')">
+<  <!-- Navigation Bar (Fixed at bottom via Flexbox) -->
+  <div class="menu-container">
+    <div class="menu-item" data-category="cv" onclick="window.location.href='cv.html'">
         <div class="menu-icon">
             <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <div class="fallback-icon" style="display: none;">
@@ -326,24 +325,21 @@ textarea {
         <div class="menu-label">CV</div>
     </div>
     
-    <!-- Achievements Section -->
-    <div class="menu-item" data-category="achievements" onclick="navigateTo('achievements.html')">
+    <div class="menu-item" data-category="achievements" onclick="window.location.href='achievements.html'">
         <div class="menu-icon">
             <i class="fas fa-trophy"></i>
         </div>
-        <div class="menu-label">Achievements</div>
+        <div class="menu-label">Achieve</div>
     </div>
     
-    <!-- Home Section (Dark Blue) -->
-    <div class="menu-item" data-category="home" onclick="navigateTo('index.html')">
+    <div class="menu-item" data-category="home" onclick="window.location.href='main.html'">
         <div class="menu-icon">
             <i class="fas fa-home"></i>
         </div>
         <div class="menu-label">Home</div>
     </div>
     
-    <!-- Habits Section -->
-    <div class="menu-item" data-category="habit-tracker" onclick="navigateTo('habits.html')">
+    <div class="menu-item" data-category="habit-tracker" onclick="window.location.href='habittracker.html'">
         <div class="menu-icon">
             <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             <div class="fallback-icon" style="display: none;">
@@ -353,15 +349,13 @@ textarea {
         <div class="menu-label">Habit Tracker</div>
     </div>
     
-    <!-- Account Section (Dark Blue) -->
-    <div class="menu-item" data-category="user-account" onclick="navigateTo('account.html')">
+    <div class="menu-item" data-category="user-account" onclick="window.location.href='account.html'">
         <div class="menu-icon">
             <i class="fas fa-user-circle"></i>
         </div>
         <div class="menu-label">Account</div>
     </div>
-</div>
-
+  </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
