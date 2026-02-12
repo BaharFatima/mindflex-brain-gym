@@ -1,356 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign Up & Login</title>
+<meta charset="UTF-8">
+<title>MindFlex - Sign Up</title>
 
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(180deg, #edefef 0%, #E1F5FE 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-  <style>
-    * {
-      margin: 0; padding: 0;
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
+.phone{
+  width:320px;
+  height:640px;
+ background: linear-gradient(180deg, #BBDEFB 0%, #E3F2FD 100%);
+  border-radius:30px;
+  padding:30px;
+  box-sizing:border-box;
+  box-shadow:0 20px 40px rgba(0,0,0,0.2);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
 
-    body {
-      background-color: #d9eaff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+h1{
+  text-align:center;
+  color:#4338ca;
+}
 
-    .container {
-      width: 350px;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-      padding: 25px 30px;
-    }
+.subtitle{
+  text-align:center;
+  font-size:12px;
+  color:#64748b;
+  margin-bottom:25px;
+}
 
-    .input-box {
-      width: 100%;
-      margin-top: 10px;
-      position: relative;
-    }
+input{
+  padding:12px;
+  margin:8px 0;
+  border-radius:12px;
+  border:1px solid #e2e8f0;
+}
 
-    .input-box input {
-      width: 100%;
-      padding: 12px 40px 12px 12px;
-      border-radius: 10px;
-      border: 1px solid #c2dcff;
-      background-color: #f4f9ff;
-    }
+button{
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  margin-top:10px;
+  cursor:pointer;
+  font-weight:bold;
+}
 
-    .error {
-      color: red;
-      font-size: 12px;
-      margin-top: 3px;
-    }
+.primary{
+  background: linear-gradient(135deg, #64B5F6, #1E88E5);
+  color:white;
+}
 
-    .error-border {
-      border-color: red !important;
-    }
+.google{
+  background:white;
+  border:1px solid #e5e7eb;
+}
 
-    .eye-icon {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      cursor: pointer;
-      font-size: 18px;
-      color: #6ea8ff;
-    }
+.link{
+  text-align:center;
+  margin-top:15px;
+  font-size:12px;
+  color:#4338ca;
+  cursor:pointer;
+}
 
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #6ea8ff;
-      color: white;
-      border: none;
-      border-radius: 25px;
-      margin-top: 15px;
-      font-weight: 600;
-      cursor: pointer;
-    }
+.message{
+  font-size:12px;
+  text-align:center;
+  margin-top:8px;
+}
+/* Circles */
+.phone {
+  position: relative;   /* IMPORTANT */
+  overflow: hidden;     /* Keeps circles inside */
+}
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.25;
+  animation: float 8s ease-in-out infinite;
+}
 
-    button:hover {
-      background-color: #5c95f5;
-    }
+.one {
+  width: 80px;
+  height: 80px;
+  background: #64B5F6;
+  top: 40px;
+  left: 30px;
+}
 
-    p {
-      text-align: center;
-      margin-top: 10px;
-      font-size: 14px;
-    }
+.two {
+  width: 80px;
+  height: 80px;
+  background: #1E88E5;
+  bottom: 10px;
+  right: -20px;
+  animation-delay: 2s;
+}
 
-    a {
-      color: #5c95f5;
-      text-decoration: none;
-    }
+.three {
+  width: 60px;
+  height: 60px;
+  background: #90CAF9;
+  top: 300px;
+  left: 10px;
+  animation-delay: 4s;
+}
 
-    .hidden { display: none; }
+/* Blob shape */
+.blob {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  background: #BBDEFB;
+  bottom: -60px;
+  left: -60px;
+  border-radius: 40% 60% 60% 40%;
+  opacity: 0.35;
+  filter: blur(10px);
+}
 
-    /* Social Buttons */
-    .social-btn {
-      width: 100%; background: white;
-      border: 1px solid #c2dcff;
-      border-radius: 25px;
-      padding: 10px;
-      margin-top: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      color: black;
-    }
+/* Floating animation */
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+  100% { transform: translateY(0px); }
+}
+.phone {
+  position: relative;
+  z-index:2;
+}
+.logo {
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+}
 
-    .social-btn:hover {
-      background-color: #f2f8ff;
-      transform: scale(1.02);
-    }
-
-    .social-btn img,
-    .social-btn svg {
-      width: 20px; height: 20px;
-    }
-  </style>
+</style>
 </head>
-
 <body>
 
-<div class="container">
+<div class="phone">
+  <img src = "logo.png" class="logo">
+<div class="bg-shapes">
+  <span class="circle one"></span>
+  <span class="circle two"></span>
+  <span class="circle three"></span>
+  <span class="blob"></span>
+</div>
+<h1>MindFlex</h1>
+<div class="subtitle">Create your account</div>
 
-  <!-- SIGNUP FORM -->
-  <div id="signupForm">
-    <h2 style="text-align:center; margin-bottom:10px;">Sign Up</h2>
+<input type="email" id="email" placeholder="Email">
+<input type="password" id="password" placeholder="Password">
 
-    <div class="input-box">
-      <input type="text" id="signupUsername" placeholder="Username">
-      <div class="error" id="signupUsernameError"></div>
-    </div>
+<button class="primary" onclick="signUp()">Sign Up</button>
 
-    <div class="input-box">
-      <input type="email" id="signupEmail" placeholder="Email">
-      <div class="error" id="signupEmailError"></div>
-    </div>
+<button class="google" onclick="googleSignIn()">
+  Continue with Google
+</button>
 
-    <div class="input-box">
-      <input type="password" id="signupPassword" placeholder="Password">
-      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('signupPassword', this)"></i>
-      <div class="error" id="signupPasswordError"></div>
-    </div>
+<div class="link" onclick="goLogin()">Already have an account? Login</div>
 
-    <button onclick="signup()">Sign Up</button>
-
-    <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
-  </div>
-
-
-  <!-- LOGIN FORM -->
-  <div id="loginForm" class="hidden">
-    <h2 style="text-align:center; margin-bottom:10px;">Login</h2>
-
-    <div class="input-box">
-      <input type="email" id="loginEmail" placeholder="Email">
-      <div class="error" id="loginEmailError"></div>
-    </div>
-
-    <div class="input-box">
-      <input type="password" id="loginPassword" placeholder="Password">
-      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('loginPassword', this)"></i>
-      <div class="error" id="loginPasswordError"></div>
-    </div>
-
-    <p style="text-align:right;">
-      <a href="#" onclick="showForgot()">Forgot password?</a>
-    </p>
-
-    <button onclick="login()">Sign In</button>
-
-    <p>Don't have an account? <a href="#" onclick="showSignup()">Sign Up</a></p>
-  </div>
-
-
-  <!-- FORGOT PASSWORD FORM -->
-  <div id="forgotForm" class="hidden">
-    <h2 style="text-align:center; margin-bottom:10px;">Reset Password</h2>
-
-    <div class="input-box">
-      <input type="password" id="currentPassword" placeholder="Current Password">
-      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('currentPassword', this)"></i>
-      <div class="error" id="currentPasswordError"></div>
-    </div>
-
-    <div class="input-box">
-      <input type="password" id="newPassword" placeholder="New Password">
-      <i class="fa-solid fa-eye eye-icon" onclick="togglePassword('newPassword', this)"></i>
-      <div class="error" id="newPasswordError"></div>
-    </div>
-
-    <button onclick="resetPassword()">Reset Password</button>
-    <p><a href="#" onclick="showLogin()">Back to Login</a></p>
-  </div>
-
-
-  <!-- SOCIAL BUTTONS -->
-  <div style="margin-top:20px;">
-    <a class="social-btn" href="https://www.facebook.com/" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path fill="#1877F2" d="M24 4C12.95 4 4 12.95 4 24c0 9.93 7.44 18.12 17.07 19.74V30.05h-5.13v-6.05h5.13v-4.5c0-5.07 3-7.87 7.62-7.87 2.21 0 4.53.4 4.53.4v4.97h-2.55c-2.52 0-3.3 1.56-3.3 3.15v3.85h5.62l-.9 6.05h-4.72v13.69C36.56 42.12 44 33.93 44 24c0-11.05-8.95-20-20-20z"/><path fill="#fff" d="M32.1 30.05l.9-6.05h-5.62v-3.85c0-1.59.78-3.15 3.3-3.15h2.55v-4.97s-2.32-.4-4.53-.4c-4.62 0-7.62 2.8-7.62 7.87v4.5h-5.13v6.05h5.13v13.69a20.07 20.07 0 0 0 6.23 0V30.05h4.72z"/></svg>
-      Continue with Facebook
-    </a>
-
-    <a class="social-btn" href="https://appleid.apple.com/" target="_blank">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"><path d="M33.52 25.22c-.04-4.07 3.33-6.04 3.47-6.13-1.9-2.77-4.86-3.15-5.91-3.19-2.51-.26-4.9 1.48-6.17 1.48-1.29 0-3.25-1.44-5.35-1.4-2.73.04-5.26 1.6-6.66 4.08-2.85 4.93-.72 12.19 2.04 16.18 1.36 1.94 2.98 4.1 5.1 4.03 2.04-.08 2.8-1.31 5.26-1.31 2.45 0 3.13 1.31 5.28 1.27 2.19-.04 3.57-1.98 4.9-3.93 1.54-2.25 2.16-4.42 2.19-4.54-.05-.02-4.22-1.62-4.15-6.54zM29.49 13.93c1.09-1.36 1.82-3.24 1.62-5.13-1.56.06-3.47 1.04-4.59 2.37-1.01 1.16-1.89 3.05-1.65 4.88 1.74.14 3.52-.88 4.62-2.12z"/></svg>
-      Continue with Apple
-    </a>
-
-    <a class="social-btn" href="https://accounts.google.com/" target="_blank">
-      <img src="https://www.gstatic.com/images/branding/product/1x/gsa_64dp.png">
-      Continue with Google
-    </a>
-  </div>
+<div class="message" id="message"></div>
 
 </div>
 
-<!-- JAVASCRIPT -->
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-function showLogin() {
-  signupForm.classList.add("hidden");
-  forgotForm.classList.add("hidden");
-  loginForm.classList.remove("hidden");
-}
+const firebaseConfig = {
+  apiKey: "AIzaSyD9bnmF1N44Nkuk3WZQjK9z4gRE00VRmCY",
+  authDomain: "mindflex-b2a0c.firebaseapp.com",
+  projectId: "mindflex-b2a0c",
+  storageBucket: "mindflex-b2a0c.firebasestorage.app",
+  messagingSenderId: "148676867562",
+  appId: "1:148676867562:web:3365a72b6fa6b3751cee93",
+  measurementId: "G-Q2T6HD3S0E"
+};
 
-function showSignup() {
-  loginForm.classList.add("hidden");
-  forgotForm.classList.add("hidden");
-  signupForm.classList.remove("hidden");
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
-function showForgot() {
-  loginForm.classList.add("hidden");
-  signupForm.classList.add("hidden");
-  forgotForm.classList.remove("hidden");
-}
+const message = document.getElementById("message");
 
-function highlight(input, errorBox, msg){
-  errorBox.innerText = msg;
-  input.classList.add("error-border");
-}
+window.signUp = async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
 
-function clearHighlight(input, errorBox){
-  errorBox.innerText = "";
-  input.classList.remove("error-border");
-}
-
-/* SIGNUP VALIDATION */
-function signup() {
-  let username = signupUsername.value.trim();
-  let email = signupEmail.value.trim();
-  let password = signupPassword.value.trim();
-
-  let valid = true;
-
-  clearHighlight(signupUsername, signupUsernameError);
-  clearHighlight(signupEmail, signupEmailError);
-  clearHighlight(signupPassword, signupPasswordError);
-
-  if (username.length < 3){
-    highlight(signupUsername, signupUsernameError, "Username must be at least 3 characters");
-    valid = false;
+  try {
+    await createUserWithEmailAndPassword(auth,email,password);
+  } catch(error){
+    message.innerText = error.message;
   }
+};
 
-  let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-  if (!email.match(emailPattern)){
-    highlight(signupEmail, signupEmailError, "Enter a valid email");
-    valid = false;
+window.googleSignIn = async () => {
+  try {
+    await signInWithPopup(auth,provider);
+  } catch(error){
+    message.innerText = error.message;
   }
+};
 
-  if (password.length < 6){
-    highlight(signupPassword, signupPasswordError, "Password must be 6+ characters");
-    valid = false;
+window.goLogin = () => {
+  window.location.href="login.html";
+};
+
+onAuthStateChanged(auth,(user)=>{
+  if(user){
+    window.location.href="main.html";
   }
-
-  if (!valid) return;
-
-  localStorage.setItem("username", username);
-  localStorage.setItem("email", email);
-  localStorage.setItem("password", password);
-
-  alert("Account created successfully!");
-  showLogin();
-}
-
-/* LOGIN */
-function login() {
-  let email = loginEmail.value.trim();
-  let password = loginPassword.value.trim();
-
-  clearHighlight(loginEmail, loginEmailError);
-  clearHighlight(loginPassword, loginPasswordError);
-
-  if (!email){
-    highlight(loginEmail, loginEmailError, "Enter your email");
-    return;
-  }
-
-  if (!password){
-    highlight(loginPassword, loginPasswordError, "Enter your password");
-    return;
-  }
-
-  if (
-    email === localStorage.getItem("email") &&
-    password === localStorage.getItem("password")
-  ) {
-    alert("Welcome " + localStorage.getItem("username") + "! Login Successful");
-    window.location.href = "main.html";   // ✅ CHANGE IS HERE
-  } else {
-    highlight(loginPassword, loginPasswordError, "Invalid email or password");
-  }
-}
-
-
-/* RESET PASSWORD */
-function resetPassword(){
-  let currentPass = currentPassword.value.trim();
-  let newPass = newPassword.value.trim();
-
-  clearHighlight(currentPassword, currentPasswordError);
-  clearHighlight(newPassword, newPasswordError);
-
-  if (currentPass !== localStorage.getItem("password")){
-    highlight(currentPassword, currentPasswordError, "Current password is incorrect");
-    return;
-  }
-
-  if (newPass.length < 6){
-    highlight(newPassword, newPasswordError, "New password must be 6+ characters");
-    return;
-  }
-
-  localStorage.setItem("password", newPass);
-  alert("Password updated!");
-  showLogin();
-}
-
-/* PASSWORD VISIBILITY */
-function togglePassword(id, icon){
-  let input = document.getElementById(id);
-  if (input.type === "password"){
-    input.type = "text";
-    icon.classList.replace("fa-eye", "fa-eye-slash");
-  } else {
-    input.type = "password";
-    icon.classList.replace("fa-eye-slash", "fa-eye");
-  }
-}
-
+});
 </script>
 
 </body>
