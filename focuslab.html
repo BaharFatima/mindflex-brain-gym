@@ -7,13 +7,25 @@
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-family: "Poppins", sans-serif;
-    background: linear-gradient(180deg, #E3F2FD, #FFFFFF);
+    background: linear-gradient(180deg, #eceff1, #FFFFFF);
     color: #0D47A1;
     min-height: 100vh;
     overflow-x: hidden;
   }
-
+.container {
+  width: 320px;
+  height: 640px;
+  border-radius: 30px;
+  background: linear-gradient(180deg, #BBDEFB 0%, #E3F2FD 100%);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
   /* Header */
   header {
     position: relative;
@@ -178,7 +190,7 @@
 </style>
 </head>
 <body>
-
+<div class = "container">
 <header>
   <button class="back-btn" onclick="window.location.href='main.html'">←</button>
   <img src="baymax.png" alt="Baymax" class="baymax" />
@@ -221,7 +233,7 @@
     <div class="card"><img src="juggling.jpeg"><p>Juggling</p><button onclick="go('juggling.html')">Play</button></div>
   </div>
 </div>
-
+</div>
 <script>
 const tabs = document.querySelectorAll(".tab");
 const contents = document.querySelectorAll(".content");
