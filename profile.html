@@ -24,7 +24,7 @@
       height: 640px;
       background-color: #ffffff;
       position: relative;
-      overflow: hidden; /* IMPORTANT so nav stays fixed */
+      overflow: hidden;
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       border-radius: 0px;
     }
@@ -116,7 +116,7 @@
       color: #65676b;
     }
 
-    /* Settings Menu Item Styles (renamed from menu-item -> settings-item) */
+    /* Settings Menu Item Styles */
     .settings-item {
       display: flex;
       justify-content: space-between;
@@ -316,22 +316,20 @@
       font-size: 13px;
     }
 
-    /* ===== Bottom Nav (same style as your other pages) ===== */
+    /* ===== NEW SHORTER NAVIGATION BAR ===== */
     .bottom-nav {
       position: absolute;
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 60px;
-      background: #FFFFFF;
-      border-top: 1px solid #E3F2FD;
+      background-color: white;
       border-radius: 20px 20px 0 0;
+      padding: 6px 5px 10px 5px; /* REDUCED PADDING MAKES IT MUCH SHORTER */
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
       display: flex;
       justify-content: space-around;
       align-items: center;
-      box-shadow: 0 -4px 10px rgba(0,0,0,0.08);
-      padding: 8px 5px;
-      z-index: 50;
+      z-index: 100;
     }
 
     .nav-item {
@@ -341,73 +339,99 @@
       gap: 3px;
       cursor: pointer;
       transition: all 0.3s ease;
-      padding: 2px;
+      padding: 4px;
+      position: relative;
       flex: 1;
       text-decoration: none;
     }
 
     .nav-icon {
-      width: 30px;
-      height: 30px;
+      width: 36px;
+      height: 36px;
       display: flex;
       justify-content: center;
       align-items: center;
       transition: all 0.3s ease;
-      color: #90CAF9;
+      color: #5f6368;
     }
 
-    .nav-icon i { font-size: 18px; transition: all 0.3s ease; }
+    .nav-icon i {
+      font-size: 22px;
+      transition: all 0.3s ease;
+    }
 
     .nav-label {
+      font-family: 'Poppins', sans-serif;
       font-size: 9px;
-      /* CHANGED TO DARK BLUE AND BOLD */
-      color: #0D47A1;
-      font-weight: bold;
+      color: #5f6368;
       text-align: center;
       line-height: 1.2;
+      font-weight: 600;
+      transition: color 0.3s ease;
     }
 
+    /* Pop-up effect when selected */
     .nav-item.selected .nav-icon i {
-      transform: translateY(-8px) scale(1.2);
+      transform: translateY(-5px) scale(1.15); /* Reduced pop up amount */
       text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
 
-    .nav-item[data-category="achievements"].selected .nav-icon i { color: #9c27b0; }
-    .nav-item[data-category="home"].selected .nav-icon i { color: #4285f4; }
-    .nav-item[data-category="habit-tracker"].selected .nav-icon i { color: #ff4081; }
-    .nav-item[data-category="user-account"].selected .nav-icon i { color: #00bcd4; }
+    .nav-item.selected .nav-label {
+      color: #1565C0;
+      font-weight: 700;
+    }
 
+    /* Specific colors for each menu item */
+    .nav-item[data-category="cv"].selected .nav-icon i { color: #0D47A1; }
+    .nav-item[data-category="achievements"].selected .nav-icon i { color: #9c27b0; }
+    .nav-item[data-category="home"].selected .nav-icon i { color: #1565C0; }
+    .nav-item[data-category="habit-tracker"].selected .nav-icon i { color: #ff4081; }
+    .nav-item[data-category="user-account"].selected .nav-icon i { color: #00838F; }
+
+    /* Image styling */
     .nav-icon img {
-      width: 18px;
-      height: 18px;
+      width: 22px;
+      height: 22px;
       transition: all 0.3s ease;
       object-fit: contain;
       filter: grayscale(100%) brightness(0.7);
-      border-radius: 6px;
-    }
-    .nav-item.selected .nav-icon img {
-      transform: translateY(-8px) scale(1.2);
-      filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
       border-radius: 8px;
     }
 
+    .nav-item.selected .nav-icon img {
+      transform: translateY(-5px) scale(1.15);
+      filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+      border-radius: 10px;
+    }
+
+    .nav-item[data-category="cv"].selected .nav-icon img {
+      filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(13, 71, 161, 0.4));
+    }
+
+    /* Fallback icon styling */
     .nav-icon .fallback-icon {
-      width: 18px;
-      height: 18px;
-      background-color: #90CAF9;
+      width: 22px;
+      height: 22px;
+      background-color: #5f6368;
       border-radius: 6px;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
       font-weight: bold;
+      font-size: 11px;
       transition: all 0.3s ease;
     }
+
     .nav-item.selected .nav-icon .fallback-icon {
       background-color: #ff4081;
-      transform: translateY(-8px) scale(1.2);
+      transform: translateY(-5px) scale(1.15);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       border-radius: 8px;
+    }
+
+    .nav-item[data-category="cv"].selected .nav-icon .fallback-icon {
+      background-color: #0D47A1;
     }
   </style>
 </head>
@@ -750,41 +774,48 @@
       </div>
     </div>
 
-     <!-- ========== STANDARD NAV BAR - CONSISTENT ACROSS ALL PAGES ========== -->
+    <!-- ========== NEW SHORTER NAVIGATION BAR ========== -->
     <nav class="bottom-nav">
-        <a href="cv.html" class="nav-item" data-category="cv">
-            <div class="nav-icon">
-                <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="fallback-icon" style="display: none;">
-                    <i class="fas fa-file-alt"></i>
-                </div>
-            </div>
-            <div class="nav-label">CV</div>
-        </a>
+      <a href="cv.html" class="nav-item" data-category="cv">
+        <div class="nav-icon">
+          <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="fallback-icon" style="display: none;">
+            <i class="fas fa-file-alt"></i>
+          </div>
+        </div>
+        <div class="nav-label">CV</div>
+      </a>
 
-        <a href="#" class="nav-item selected" data-category="achievements">
-            <div class="nav-icon"><i class="fas fa-trophy" style="color: #9c27b0;"></i></div>
-            <div class="nav-label">Achievements</div>
-        </a>
+      <a href="#" class="nav-item" data-category="achievements">
+        <div class="nav-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="nav-label">Achievements</div>
+      </a>
 
-        <a href="main.html" class="nav-item" data-category="home">
-            <div class="nav-icon"><i class="fas fa-home"></i></div>
-            <div class="nav-label">Home</div>
-        </a>
+      <a href="main.html" class="nav-item" data-category="home">
+        <div class="nav-icon">
+          <i class="fas fa-home"></i>
+        </div>
+        <div class="nav-label">Home</div>
+      </a>
 
-        <a href="habittracker.html" class="nav-item" data-category="habit-tracker">
-            <div class="nav-icon">
-                <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="fallback-icon" style="display: none;"><i class="fas fa-check"></i></div>
-            </div>
-            <div class="nav-label">Habit Tracker</div>
-        </a>
+      <a href="habittracker.html" class="nav-item" data-category="habit-tracker">
+        <div class="nav-icon">
+          <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="fallback-icon" style="display: none;"><i class="fas fa-check"></i></div>
+        </div>
+        <div class="nav-label">Habits</div>
+      </a>
 
-        <a href="profile.html" class="nav-item" data-category="user-account">
-            <div class="nav-icon"><i class="fas fa-user-circle"></i></div>
-            <div class="nav-label">Account</div>
-        </a>
+      <a href="profile.html" class="nav-item selected" data-category="user-account">
+        <div class="nav-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="nav-label">Account</div>
+      </a>
     </nav>
+
   </div>
 
   <script>
@@ -1009,7 +1040,7 @@
         }
       });
 
-      // Demo internal login (you’ll replace this when you send your login/signup page)
+      // Demo internal login (you'll replace this when you send your login/signup page)
       document.getElementById('login-btn').addEventListener('click', function() {
         const u = document.getElementById('login-username').value.trim();
         const p = document.getElementById('login-password').value.trim();
