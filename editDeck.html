@@ -44,58 +44,156 @@
     </main>
   </div>
 
-<script>
-let decks = JSON.parse(localStorage.getItem('customDecks') || '[]');
-const index = localStorage.getItem('editDeckIndex');
-let currentDeck = decks[index] || {name:'', cards:[]};
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { 
+  getFirestore, 
+  doc, 
+  getDoc,
+  updateDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+  addDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-document.getElementById('deckName').value = currentDeck.name;
-let cards = [...currentDeck.cards];
-renderList();
+const firebaseConfig = {
+  apiKey: "AIzaSyD9bnmF1N44Nkuk3WZQjK9z4gRE00VRmCY",
+  authDomain: "mindflex-b2a0c.firebaseapp.com",
+  projectId: "mindflex-b2a0c",
+  storageBucket: "mindflex-b2a0c.firebasestorage.app",
+  messagingSenderId: "148676867562",
+  appId: "1:148676867562:web:3365a72b6fa6b3751cee93",
+  measurementId: "G-Q2T6HD3S0E"
+};
 
-function renderList(){
-  const list=document.getElementById('qaList');
-  list.innerHTML='';
-  cards.forEach((c,i)=>{
-    const item=document.createElement('div');
-    item.className='qa-item';
-    item.innerHTML=`<div class="qa-text"><b>Q:</b> ${c.q}<br><b>A:</b> ${c.a}</div>`;
-    const del=document.createElement('button');
-    del.textContent='🗑️';
-    del.className='delete-btn';
-    del.onclick=()=>{cards.splice(i,1);renderList();};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let cards = [];
+let deckId = localStorage.getItem("editDeckId");
+
+if (!deckId) {
+  alert("No deck selected");
+  window.location.href = "flashcardMenu.html";
+}
+
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  loadDeck(user.uid);
+});
+
+async function loadDeck(uid) {
+  const deckRef = doc(db, "users", uid, "flashcardDecks", deckId);
+  const deckSnap = await getDoc(deckRef);
+
+  if (!deckSnap.exists()) {
+    alert("Deck not found");
+    return;
+  }
+
+  document.getElementById("deckName").value = deckSnap.data().name;
+
+  const cardsSnap = await getDocs(
+    collection(db, "users", uid, "flashcardDecks", deckId, "cards")
+  );
+
+  cards = [];
+  cardsSnap.forEach(cardDoc => {
+    cards.push({ id: cardDoc.id, ...cardDoc.data() });
+  });
+
+  renderList();
+}
+
+function renderList() {
+  const list = document.getElementById("qaList");
+  list.innerHTML = "";
+
+  cards.forEach((c, i) => {
+    const item = document.createElement("div");
+    item.className = "qa-item";
+
+    item.innerHTML = `
+      <div class="qa-text">
+        <b>Q:</b> ${c.question}<br>
+        <b>A:</b> ${c.answer}
+      </div>
+    `;
+
+    const del = document.createElement("button");
+    del.textContent = "🗑️";
+    del.className = "delete-btn";
+
+    del.onclick = async () => {
+      const user = auth.currentUser;
+      await deleteDoc(
+        doc(db, "users", user.uid, "flashcardDecks", deckId, "cards", c.id)
+      );
+      cards.splice(i, 1);
+      renderList();
+    };
+
     item.appendChild(del);
     list.appendChild(item);
   });
 }
 
-function addQA(){
-  const q=document.getElementById('question').value.trim();
-  const a=document.getElementById('answer').value.trim();
-  if(!q||!a) return alert('Please fill both fields!');
-  cards.push({q,a});
-  document.getElementById('question').value='';
-  document.getElementById('answer').value='';
+window.addQA = async function () {
+  const q = document.getElementById("question").value.trim();
+  const a = document.getElementById("answer").value.trim();
+
+  if (!q || !a) return alert("Please fill both fields!");
+
+  const user = auth.currentUser;
+
+  const newCardRef = await addDoc(
+    collection(db, "users", user.uid, "flashcardDecks", deckId, "cards"),
+    { question: q, answer: a }
+  );
+
+  cards.push({ id: newCardRef.id, question: q, answer: a });
+
+  document.getElementById("question").value = "";
+  document.getElementById("answer").value = "";
+
   renderList();
-}
+};
 
-function saveDeck(){
-  const name=document.getElementById('deckName').value.trim();
-  if(!name||cards.length===0) return alert('Add a name and at least one card.');
-  decks[index]={name,cards};
-  localStorage.setItem('customDecks',JSON.stringify(decks));
-  alert('Deck updated!');
-  window.location.href='flashcardMenu.html';
-}
+window.saveDeck = async function () {
+  const name = document.getElementById("deckName").value.trim();
+  if (!name) return alert("Deck name required!");
 
-function deleteDeck(){
-  if(confirm('Delete this deck?')){
-    decks.splice(index,1);
-    localStorage.setItem('customDecks',JSON.stringify(decks));
-    alert('Deck deleted.');
-    window.location.href='flashcardMenu.html';
-  }
-}
+  const user = auth.currentUser;
+
+  await updateDoc(
+    doc(db, "users", user.uid, "flashcardDecks", deckId),
+    { name: name }
+  );
+
+  alert("Deck updated!");
+  window.location.href = "flashcardMenu.html";
+};
+
+window.deleteDeck = async function () {
+  if (!confirm("Delete this deck?")) return;
+
+  const user = auth.currentUser;
+
+  await deleteDoc(
+    doc(db, "users", user.uid, "flashcardDecks", deckId)
+  );
+
+  alert("Deck deleted.");
+  window.location.href = "flashcardMenu.html";
+};
 </script>
 </body>
 </html>
