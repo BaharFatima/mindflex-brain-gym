@@ -29,7 +29,6 @@
       height: 640px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       border-radius: 25px;
       overflow: hidden;
       border: 2px solid #cfe8ff;
@@ -58,6 +57,7 @@
       cursor: pointer;
       color: #003366;
       font-weight: bold;
+      text-decoration: none;
     }
 
     .welcome em {
@@ -67,7 +67,9 @@
     main {
       width: 100%;
       flex: 1;
-      padding: 0 20px 70px;
+      padding: 0 20px;
+      overflow-y: auto;
+      padding-bottom: 65px; 
     }
 
     h2 {
@@ -153,6 +155,7 @@
       align-items: center;
       justify-content: center;
       transition: background 0.3s, transform 0.2s;
+      cursor: pointer;
     }
 
     .arrow-btn:hover {
@@ -160,61 +163,125 @@
       transform: scale(1.1);
     }
 
-    .nav-container {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
+    /* ===== SHORTER NAVIGATION BAR STYLES ===== */
     .menu-container {
+      position: absolute;
+      bottom: 0;
+      left: 0;
       width: 100%;
-      background: #ffffff;
-      border-radius: 12px 12px 0 0;
-      padding: 6px 16px;
+      background-color: white;
+      border-radius: 20px 20px 0 0;
+      padding: 8px 5px; 
+      box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
       display: flex;
       justify-content: space-around;
-      align-items: center;
-      box-shadow: 0 -3px 8px rgba(0, 0, 0, 0.1);
-      height: 48px;
+      animation: slideUp 0.5s ease-out;
+      z-index: 50;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .menu-item {
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      flex: 1;
+      gap: 3px;
       cursor: pointer;
+      transition: all 0.3s ease;
+      padding: 2px;
+      flex: 1;
+      text-decoration: none;
     }
 
     .menu-icon {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
+      width: 32px;
+      height: 32px;
       display: flex;
-      align-items: center;
       justify-content: center;
-      background: #f0f2f5;
+      align-items: center;
+      transition: all 0.3s ease;
       color: #5f6368;
-      transition: all 0.18s ease;
     }
 
-    .menu-item.selected .menu-icon {
-      width: 34px;
-      height: 34px;
-      transform: translateY(-3px);
-      color: #fff;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    .menu-icon i {
+      font-size: 20px;
+      transition: all 0.3s ease;
     }
 
-    .menu-item:nth-child(1).selected .menu-icon { background: #4285f4; }
-    .menu-item:nth-child(2).selected .menu-icon { background: #9c27b0; }
-    .menu-item:nth-child(3).selected .menu-icon { background: #ff9800; }
-    .menu-item:nth-child(4).selected .menu-icon { background: #f4b400; }
-    .menu-item:nth-child(5).selected .menu-icon { background: #00bcd4; }
+    .menu-label {
+      font-size: 9px;
+      color: #5f6368;
+      text-align: center;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+
+    .menu-item.selected .menu-icon i {
+      transform: translateY(-5px) scale(1.1);
+      text-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .menu-item[data-category="cv"].selected .menu-icon i { color: #0D47A1; }
+    .menu-item[data-category="achievements"].selected .menu-icon i { color: #9c27b0; }
+    .menu-item[data-category="home"].selected .menu-icon i { color: #1565C0; }
+    .menu-item[data-category="habit-tracker"].selected .menu-icon i { color: #ff4081; }
+    .menu-item[data-category="user-account"].selected .menu-icon i { color: #00838F; }
+
+    .menu-icon img {
+      width: 20px;
+      height: 20px;
+      transition: all 0.3s ease;
+      object-fit: contain;
+      filter: grayscale(100%) brightness(0.7);
+      border-radius: 6px;
+    }
+
+    .menu-item.selected .menu-icon img {
+      transform: translateY(-5px) scale(1.1);
+      filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+      border-radius: 8px;
+    }
+
+    .menu-item[data-category="cv"].selected .menu-icon img {
+      filter: grayscale(0%) brightness(1.1) drop-shadow(0 4px 8px rgba(13, 71, 161, 0.4));
+    }
+
+    .menu-icon .fallback-icon {
+      width: 20px;
+      height: 20px;
+      background-color: #5f6368;
+      border-radius: 6px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .menu-item.selected .menu-icon .fallback-icon {
+      background-color: #ff4081;
+      transform: translateY(-5px) scale(1.1);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-radius: 8px;
+    }
+
+    .menu-item[data-category="cv"].selected .menu-icon .fallback-icon { background-color: #0D47A1; }
+    .menu-item[data-category="habit-tracker"].selected .menu-icon .fallback-icon { background-color: #ff4081; }
+
+    main::-webkit-scrollbar { width: 4px; }
+    main::-webkit-scrollbar-track { background: transparent; }
+    main::-webkit-scrollbar-thumb { background: #B3E5FC; border-radius: 10px; }
   </style>
 </head>
 
@@ -224,7 +291,7 @@
     <!-- Header with Back Button -->
     <header>
       <div class="left-header">
-        <div class="back-btn" onclick="window.location.href='main.html'">←</div>
+        <a href="main.html" class="back-btn">←</a>
         <div class="welcome">Welcome <em id="username">User!</em></div>
       </div>
     </header>
@@ -235,7 +302,7 @@
       <p>Some context hehe :p</p>
 
       <div class="illustration">
-        <img src="bluestudy.png" alt="Study illustration">
+        <img src="bluestudy.png" alt="Study illustration" onerror="this.src='https://img.icons8.com/clouds/200/reading.png'">
       </div>
 
       <div class="grid">
@@ -271,26 +338,85 @@
           <button class="arrow-btn">→</button>
         </a>
       </div>
+
+      <!-- StudyLens Card -->
+      <a href="StudyLens.html" class="card" style="width: 100%; height: 55px; margin-top: 12px; border-radius: 15px;">
+        <div class="card-content" style="flex-direction: row; align-items: center; gap: 10px;">
+          <div class="card-icon" style="margin-bottom: 0; font-size: 1.3rem;">🔍</div>
+          <div class="card-text" style="margin-left: 0;">Study Lens</div>
+        </div>
+        <button class="arrow-btn">→</button>
+      </a>
+
     </main>
 
-    <!-- Bottom Navigation -->
-    <div class="nav-container">
-      <div class="menu-container">
-        <div class="menu-item selected"><div class="menu-icon"><i class="fas fa-home"></i></div></div>
-        <div class="menu-item"><div class="menu-icon"><i class="fas fa-gamepad"></i></div></div>
-        <div class="menu-item"><div class="menu-icon"><i class="fas fa-book"></i></div></div>
-        <div class="menu-item"><div class="menu-icon"><i class="fas fa-lightbulb"></i></div></div>
-        <div class="menu-item"><div class="menu-icon"><i class="fas fa-user-circle"></i></div></div>
-      </div>
+    <!-- SHORTER Navigation Bar -->
+    <div class="menu-container">
+      <a href="cv.html" class="menu-item" data-category="cv">
+        <div class="menu-icon">
+          <img src="cv.png" alt="CV" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="fallback-icon" style="display: none;">
+            <i class="fas fa-file-alt"></i>
+          </div>
+        </div>
+        <div class="menu-label">CV</div>
+      </a>
+      
+      <a href="achievements.html" class="menu-item" data-category="achievements">
+        <div class="menu-icon">
+          <i class="fas fa-trophy"></i>
+        </div>
+        <div class="menu-label">Achievements</div>
+      </a>
+      
+      <a href="main.html" class="menu-item selected" data-category="home">
+        <div class="menu-icon">
+          <i class="fas fa-home"></i>
+        </div>
+        <div class="menu-label">Home</div>
+      </a>
+      
+      <a href="habittracker.html" class="menu-item" data-category="habit-tracker">
+        <div class="menu-icon">
+          <img src="https://z-cdn-media.chatglm.cn/files/a1979dda-a3e4-4b38-b0cf-00e4ad455277_pasted_image_1762936027415.png?auth_key=1862936037-6cc8a5a356484e1cb70a8f599e1f2ce8-0-496c548f3f7ef2ea6a808a3cc812dc2c" alt="Habit Tracker" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="fallback-icon" style="display: none;">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+        <div class="menu-label">Habits</div>
+      </a>
+      
+      <a href="profile.html" class="menu-item" data-category="user-account">
+        <div class="menu-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+        <div class="menu-label">Account</div>
+      </a>
     </div>
 
   </div>
 
   <script>
-    document.querySelectorAll('.menu-item').forEach(it => {
-      it.addEventListener('click', () => {
-        document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('selected'));
-        it.classList.add('selected');
+    document.addEventListener('DOMContentLoaded', function() {
+      const menuItems = document.querySelectorAll('.menu-item');
+      
+      menuItems.forEach(item => {
+        item.addEventListener('click', function(e) {
+          const targetUrl = this.getAttribute('href');
+          
+          const wasSelected = this.classList.contains('selected');
+          menuItems.forEach(i => i.classList.remove('selected'));
+          if (!wasSelected) {
+            this.classList.add('selected');
+          }
+
+          if (targetUrl && targetUrl !== '#') {
+            e.preventDefault();
+            setTimeout(() => {
+              window.location.href = targetUrl;
+            }, 250);
+          }
+        });
       });
     });
   </script>
