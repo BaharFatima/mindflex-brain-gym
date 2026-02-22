@@ -4,7 +4,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.send("Server running");
+ res.sendFile(__dirname + "/index.html");
 });
 
 app.listen(PORT, () => {
