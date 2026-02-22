@@ -259,7 +259,7 @@ body {
     
     <!-- Header -->
     <div class="header">
-      <h2>Good Morning,<br><span>John Doe! 👋</span></h2>
+    <h2 id="greeting">Welcome back,<br><span id="username">User</span></h2>
       <div class="weather">
         ☁️ 76°<br><span>Tuesday, April 23</span>
       </div>
@@ -354,10 +354,21 @@ body {
   const auth = getAuth(app);
 
   onAuthStateChanged(auth, (user) => {
-    if (!user) {
-      window.location.href = "login.html";
-    }
-  });
+  if (!user) {
+    window.location.replace("loginmain.html");
+    return;
+  }
+
+  const nameSpan = document.getElementById("username");
+
+  // Priority order
+  let name =
+    user.displayName ||
+    user.email?.split("@")[0] ||
+    "User";
+
+  nameSpan.textContent = name + " 👋";
+});
 
   // FIX: Attach navigateTo to window so HTML onclick can see it
   window.navigateTo = function(page) {
